@@ -7,6 +7,7 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
+    ChessPiece[][] squares = new ChessPiece[8][8];
 
     public ChessBoard() {
         
@@ -19,7 +20,18 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        int[] realPos = programmaticPosition(position);
+        squares[realPos[0]][realPos[1]] = piece;
+    }
+
+    /**
+     * Gets the programmatic position of a chessPosition
+     *
+     * @param position The input position
+     * @return an array with two numbers, row then col
+     */
+    private int[] programmaticPosition(ChessPosition position) {
+        return new int[]{position.getRow()-1, position.getColumn()-1};
     }
 
     /**
@@ -30,7 +42,8 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        int[] realPos = programmaticPosition(position);
+        return squares[realPos[0]][realPos[1]];
     }
 
     /**
