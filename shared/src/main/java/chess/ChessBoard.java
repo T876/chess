@@ -30,7 +30,7 @@ public class ChessBoard {
      * @param position The input position
      * @return an array with two numbers, row then col
      */
-    private int[] programmaticPosition(ChessPosition position) {
+    public int[] programmaticPosition(ChessPosition position) {
         return new int[]{position.getRow()-1, position.getColumn()-1};
     }
 

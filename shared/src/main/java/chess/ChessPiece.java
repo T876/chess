@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -58,8 +59,78 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
         if (piece.getPieceType() == PieceType.BISHOP) {
-            // TODO: Implement getBishopMoves and call it here
+            moves.addAll(getDiagonalMoves(board, myPosition));
         }
         return moves;
+    }
+
+    private Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+
+        // Get the code-accurate numbers
+        int[] realPos = board.programmaticPosition(myPosition);
+        int row = realPos[0];
+        int col = realPos[1];
+
+        // Get the board-accurate numbers
+        int boardRow = myPosition.getRow();
+        int boardCol = myPosition.getColumn();
+        ChessPosition start = new ChessPosition(boardRow, boardCol);
+
+        // Diagonal up and right
+        for (int i = 1; row + i < 8; i++) {
+            if (col + i >= 8) {
+                break;
+            }
+
+            ChessPosition end = new ChessPosition(boardRow + i, boardCol + i);
+            moves.add(new ChessMove(start, end, null));
+        }
+
+        // Diagonal down and right
+        for (int i = 1; row - i >= 0; i++) {
+            if (col + i >= 8) {
+                break;
+            }
+
+            ChessPosition end = new ChessPosition(boardRow - i, boardCol + i);
+            moves.add(new ChessMove(start, end, null));
+        }
+
+        // Diagonal down and left
+        for (int i = 1; row - i >= 0; i++) {
+            if (col - i < 0) {
+                break;
+            }
+
+            ChessPosition end = new ChessPosition(boardRow - i, boardCol - i);
+            moves.add(new ChessMove(start, end, null));
+        }
+
+        // Diagonal up and left
+        for (int i = 1; row + i < 8; i++) {
+            if (col - i < 0) {
+                break;
+            }
+
+            ChessPosition end = new ChessPosition(boardRow + i, boardCol - i);
+            moves.add(new ChessMove(start, end, null));
+        }
+
+        return moves;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 }
