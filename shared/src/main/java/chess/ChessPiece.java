@@ -55,18 +55,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        MovementUtils utils = new MovementUtils();
         ChessPiece piece = board.getPiece(myPosition);
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
         if (piece.getPieceType() == PieceType.BISHOP) {
-            moves.addAll(getDiagonalMoves(board, myPosition));
+            moves.addAll(utils.getDiagonalMoves(board,this, myPosition));
+        } else if (piece.getPieceType() == PieceType.ROOK) {
+            moves.addAll(utils.getStraightLineMoves(board, this, myPosition));
         }
         return moves;
-    }
-
-    private Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition myPosition) {
-        MovementUtils utils = new MovementUtils();
-        return utils.getDiagonalMoves(board,this, myPosition);
     }
 
     @Override

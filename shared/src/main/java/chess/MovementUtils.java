@@ -114,6 +114,78 @@ public class MovementUtils {
         return moves;
     }
 
+    Collection<ChessMove> getStraightLineMoves (ChessBoard board, ChessPiece piece, ChessPosition myPosition) {
+        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+
+        // Get the code-accurate numbers
+        int[] realPos = board.programmaticPosition(myPosition);
+        int row = realPos[0];
+        int col = realPos[1];
+
+        // Get the board-accurate numbers
+        int boardRow = myPosition.getRow();
+        int boardCol = myPosition.getColumn();
+        ChessPosition start = new ChessPosition(boardRow, boardCol);
+
+        for (int i = boardRow + 1; i <= 8; i++) { // up
+            ChessPosition end = new ChessPosition(i, boardCol);
+            ChessMove move = new ChessMove(start, end, null);
+
+            if(willCapturePiece(board, move, piece)) {
+                moves.add(move);
+                break;
+            } else if (isBlocked(board, move, piece)) {
+                break;
+            } else {
+                moves.add(move);
+            }
+        }
+
+        for (int i = boardRow - 1; i > 0; i--) { // down
+            ChessPosition end = new ChessPosition(i, boardCol);
+            ChessMove move = new ChessMove(start, end, null);
+
+            if(willCapturePiece(board, move, piece)) {
+                moves.add(move);
+                break;
+            } else if (isBlocked(board, move, piece)) {
+                break;
+            } else {
+                moves.add(move);
+            }
+        }
+
+        for (int i = boardCol + 1; i <= 8; i++) { // right
+            ChessPosition end = new ChessPosition(boardRow, i);
+            ChessMove move = new ChessMove(start, end, null);
+
+            if(willCapturePiece(board, move, piece)) {
+                moves.add(move);
+                break;
+            } else if (isBlocked(board, move, piece)) {
+                break;
+            } else {
+                moves.add(move);
+            }
+        }
+
+        for (int i = boardCol - 1; i > 0; i--) { // left
+            ChessPosition end = new ChessPosition(boardRow, i);
+            ChessMove move = new ChessMove(start, end, null);
+
+            if(willCapturePiece(board, move, piece)) {
+                moves.add(move);
+                break;
+            } else if (isBlocked(board, move, piece)) {
+                break;
+            } else {
+                moves.add(move);
+            }
+        }
+
+        return moves;
+    }
+
 
 }
 
