@@ -41,10 +41,7 @@ public class MovementUtils {
                 break;
             }
 
-            ChessPosition end = new ChessPosition(boardRow + i, boardCol + i);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, boardRow + i, boardCol + i)) {
                 break;
             }
         }
@@ -55,10 +52,7 @@ public class MovementUtils {
                 break;
             }
 
-            ChessPosition end = new ChessPosition(boardRow - i, boardCol + i);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, boardRow - i, boardCol + i)) {
                 break;
             }
         }
@@ -69,10 +63,7 @@ public class MovementUtils {
                 break;
             }
 
-            ChessPosition end = new ChessPosition(boardRow - i, boardCol - i);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, boardRow - i, boardCol - i)) {
                 break;
             }
         }
@@ -83,10 +74,7 @@ public class MovementUtils {
                 break;
             }
 
-            ChessPosition end = new ChessPosition(boardRow + i, boardCol - i);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, boardRow + i, boardCol - i)) {
                 break;
             }
         }
@@ -103,42 +91,46 @@ public class MovementUtils {
         ChessPosition start = new ChessPosition(boardRow, boardCol);
 
         for (int i = boardRow + 1; i <= 8; i++) { // up
-            ChessPosition end = new ChessPosition(i, boardCol);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, i, boardCol)) {
                 break;
             }
         }
 
         for (int i = boardCol + 1; i <= 8; i++) { // right
-            ChessPosition end = new ChessPosition(boardRow, i);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, boardRow, i)) {
                 break;
             }
         }
 
         for (int i = boardRow - 1; i > 0; i--) { // down
-            ChessPosition end = new ChessPosition(i, boardCol);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, i, boardCol)) {
                 break;
             }
         }
 
         for (int i = boardCol - 1; i > 0; i--) { // left
-            ChessPosition end = new ChessPosition(boardRow, i);
-            ChessMove move = new ChessMove(start, end, null);
-
-            if (shouldStopMovement(board, move, piece, moves)) {
+            if (evaluateMoveAndCheckStop(board, start, moves, boardRow, i)) {
                 break;
             }
         }
 
         return moves;
+    }
+
+    private boolean evaluateMoveAndCheckStop(ChessBoard board,
+                                             ChessPosition start,
+                                             Collection<ChessMove> moves,
+                                             int newRow,
+                                             int newCol) {
+        ChessPiece myPiece = board.getPiece(start);
+        ChessPosition end = new ChessPosition(newRow, newCol);
+        ChessMove move = new ChessMove(start, end, null);
+
+        if (shouldStopMovement(board, move, myPiece, moves)) {
+            return true;
+        }
+
+        return false;
     }
 
     private boolean shouldStopMovement(ChessBoard board,
