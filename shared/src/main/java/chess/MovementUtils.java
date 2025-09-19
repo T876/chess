@@ -4,12 +4,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MovementUtils {
-    public boolean willCapturePiece(ChessBoard board, ChessMove move) {
-        return false;
+    public boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
+        int row = move.getEndPosition().getRow() - 1;
+        int col = move.getEndPosition().getColumn() - 1;
+
+        ChessPiece piece = board.squares[row][col];
+
+        return piece != null && piece.getTeamColor() != myPiece.getTeamColor();
     }
 
-    public boolean isBlocked(ChessBoard board, ChessMove move) {
-        return false;
+    public boolean isBlocked(ChessBoard board, ChessMove move, ChessPiece myPiece) {
+        int row = move.getEndPosition().getRow() - 1;
+        int col = move.getEndPosition().getColumn() - 1;
+
+        ChessPiece piece = board.squares[row][col];
+
+        return piece != null && piece.getTeamColor() == myPiece.getTeamColor();
     }
 
     Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPiece piece, ChessPosition myPosition) {
@@ -34,10 +44,10 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow + i, boardCol + i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move)) {
+            if(willCapturePiece(board, move, piece)) {
                 moves.add(move);
                 break;
-            } else if (isBlocked(board, move)) {
+            } else if (isBlocked(board, move, piece)) {
                 break;
             } else {
                 moves.add(move);
@@ -53,10 +63,10 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow - i, boardCol + i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move)) {
+            if(willCapturePiece(board, move, piece)) {
                 moves.add(move);
                 break;
-            } else if (isBlocked(board, move)) {
+            } else if (isBlocked(board, move, piece)) {
                 break;
             } else {
                 moves.add(move);
@@ -72,10 +82,10 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow - i, boardCol - i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move)) {
+            if(willCapturePiece(board, move, piece)) {
                 moves.add(move);
                 break;
-            } else if (isBlocked(board, move)) {
+            } else if (isBlocked(board, move, piece)) {
                 break;
             } else {
                 moves.add(move);
@@ -91,10 +101,10 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow + i, boardCol - i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move)) {
+            if(willCapturePiece(board, move, piece)) {
                 moves.add(move);
                 break;
-            } else if (isBlocked(board, move)) {
+            } else if (isBlocked(board, move, piece)) {
                 break;
             } else {
                 moves.add(move);
