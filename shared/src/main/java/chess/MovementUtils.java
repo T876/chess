@@ -7,56 +7,50 @@ public class MovementUtils {
     Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
-        // Get the code-accurate numbers
-        int[] realPos = board.programmaticPosition(myPosition);
-        int row = realPos[0];
-        int col = realPos[1];
-
         // Get the board-accurate numbers
         int boardRow = myPosition.getRow();
         int boardCol = myPosition.getColumn();
-        ChessPosition start = new ChessPosition(boardRow, boardCol);
 
         // Diagonal up and right
-        for (int i = 1; row + i < 8; i++) {
-            if (col + i >= 8) {
+        for (int i = 1; boardRow + i <= 8; i++) {
+            if (boardCol + i > 8) {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, start, moves, boardRow + i, boardCol + i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow + i, boardCol + i)) {
                 break;
             }
         }
 
         // Diagonal down and right
-        for (int i = 1; row - i >= 0; i++) {
-            if (col + i >= 8) {
+        for (int i = 1; boardRow - i > 0; i++) {
+            if (boardCol + i > 8) {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, start, moves, boardRow - i, boardCol + i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow - i, boardCol + i)) {
                 break;
             }
         }
 
         // Diagonal down and left
-        for (int i = 1; row - i >= 0; i++) {
-            if (col - i < 0) {
+        for (int i = 1; boardRow - i > 0; i++) {
+            if (boardCol - i <= 0) {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, start, moves, boardRow - i, boardCol - i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow - i, boardCol - i)) {
                 break;
             }
         }
 
         // Diagonal up and left
-        for (int i = 1; row + i < 8; i++) {
-            if (col - i < 0) {
+        for (int i = 1; boardRow + i <= 8; i++) {
+            if (boardCol - i <= 0) {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, start, moves, boardRow + i, boardCol - i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow + i, boardCol - i)) {
                 break;
             }
         }
@@ -70,28 +64,27 @@ public class MovementUtils {
         // Get the board-accurate numbers
         int boardRow = myPosition.getRow();
         int boardCol = myPosition.getColumn();
-        ChessPosition start = new ChessPosition(boardRow, boardCol);
 
         for (int i = boardRow + 1; i <= 8; i++) { // up
-            if (evaluateMoveAndCheckStop(board, start, moves, i, boardCol)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, i, boardCol)) {
                 break;
             }
         }
 
         for (int i = boardCol + 1; i <= 8; i++) { // right
-            if (evaluateMoveAndCheckStop(board, start, moves, boardRow, i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow, i)) {
                 break;
             }
         }
 
         for (int i = boardRow - 1; i > 0; i--) { // down
-            if (evaluateMoveAndCheckStop(board, start, moves, i, boardCol)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, i, boardCol)) {
                 break;
             }
         }
 
         for (int i = boardCol - 1; i > 0; i--) { // left
-            if (evaluateMoveAndCheckStop(board, start, moves, boardRow, i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow, i)) {
                 break;
             }
         }
@@ -99,7 +92,9 @@ public class MovementUtils {
         return moves;
     }
 
-
+//    Collection<ChessMove> getPewnMoves(ChessBoard board, ChessPosition position) {
+//
+//    }
 
     private boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
         int row = move.getEndPosition().getRow() - 1;
