@@ -65,59 +65,8 @@ public class ChessPiece {
     }
 
     private Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new ArrayList<ChessMove>();
-
-        // Get the code-accurate numbers
-        int[] realPos = board.programmaticPosition(myPosition);
-        int row = realPos[0];
-        int col = realPos[1];
-
-        // Get the board-accurate numbers
-        int boardRow = myPosition.getRow();
-        int boardCol = myPosition.getColumn();
-        ChessPosition start = new ChessPosition(boardRow, boardCol);
-
-        // Diagonal up and right
-        for (int i = 1; row + i < 8; i++) {
-            if (col + i >= 8) {
-                break;
-            }
-
-            ChessPosition end = new ChessPosition(boardRow + i, boardCol + i);
-            moves.add(new ChessMove(start, end, null));
-        }
-
-        // Diagonal down and right
-        for (int i = 1; row - i >= 0; i++) {
-            if (col + i >= 8) {
-                break;
-            }
-
-            ChessPosition end = new ChessPosition(boardRow - i, boardCol + i);
-            moves.add(new ChessMove(start, end, null));
-        }
-
-        // Diagonal down and left
-        for (int i = 1; row - i >= 0; i++) {
-            if (col - i < 0) {
-                break;
-            }
-
-            ChessPosition end = new ChessPosition(boardRow - i, boardCol - i);
-            moves.add(new ChessMove(start, end, null));
-        }
-
-        // Diagonal up and left
-        for (int i = 1; row + i < 8; i++) {
-            if (col - i < 0) {
-                break;
-            }
-
-            ChessPosition end = new ChessPosition(boardRow + i, boardCol - i);
-            moves.add(new ChessMove(start, end, null));
-        }
-
-        return moves;
+        MovementUtils utils = new MovementUtils();
+        return utils.getDiagonalMoves(board,this, myPosition);
     }
 
     @Override
