@@ -44,13 +44,8 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow + i, boardCol + i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
@@ -63,13 +58,8 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow - i, boardCol + i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
@@ -82,13 +72,8 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow - i, boardCol - i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
@@ -101,13 +86,8 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow + i, boardCol - i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
@@ -116,11 +96,6 @@ public class MovementUtils {
 
     Collection<ChessMove> getStraightLineMoves (ChessBoard board, ChessPiece piece, ChessPosition myPosition) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
-
-        // Get the code-accurate numbers
-        int[] realPos = board.programmaticPosition(myPosition);
-        int row = realPos[0];
-        int col = realPos[1];
 
         // Get the board-accurate numbers
         int boardRow = myPosition.getRow();
@@ -131,13 +106,8 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(i, boardCol);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
@@ -145,13 +115,8 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow, i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
@@ -159,13 +124,8 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(i, boardCol);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
@@ -173,17 +133,28 @@ public class MovementUtils {
             ChessPosition end = new ChessPosition(boardRow, i);
             ChessMove move = new ChessMove(start, end, null);
 
-            if(willCapturePiece(board, move, piece)) {
-                moves.add(move);
+            if (shouldStopMovement(board, move, piece, moves)) {
                 break;
-            } else if (isBlocked(board, move, piece)) {
-                break;
-            } else {
-                moves.add(move);
             }
         }
 
         return moves;
+    }
+
+    private boolean shouldStopMovement(ChessBoard board,
+                                       ChessMove move,
+                                       ChessPiece piece,
+                                       Collection<ChessMove> moves) {
+
+        if(willCapturePiece(board, move, piece)) {
+            moves.add(move);
+            return true;
+        } else if (isBlocked(board, move, piece)) {
+            return true;
+        } else {
+            moves.add(move);
+        }
+        return false;
     }
 
 
