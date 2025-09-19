@@ -4,24 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MovementUtils {
-    public boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
-        int row = move.getEndPosition().getRow() - 1;
-        int col = move.getEndPosition().getColumn() - 1;
-
-        ChessPiece piece = board.squares[row][col];
-
-        return piece != null && piece.getTeamColor() != myPiece.getTeamColor();
-    }
-
-    public boolean isBlocked(ChessBoard board, ChessMove move, ChessPiece myPiece) {
-        int row = move.getEndPosition().getRow() - 1;
-        int col = move.getEndPosition().getColumn() - 1;
-
-        ChessPiece piece = board.squares[row][col];
-
-        return piece != null && piece.getTeamColor() == myPiece.getTeamColor();
-    }
-
     Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPiece piece, ChessPosition myPosition) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
@@ -115,6 +97,24 @@ public class MovementUtils {
         }
 
         return moves;
+    }
+
+    private boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
+        int row = move.getEndPosition().getRow() - 1;
+        int col = move.getEndPosition().getColumn() - 1;
+
+        ChessPiece piece = board.squares[row][col];
+
+        return piece != null && piece.getTeamColor() != myPiece.getTeamColor();
+    }
+
+    private boolean isBlocked(ChessBoard board, ChessMove move, ChessPiece myPiece) {
+        int row = move.getEndPosition().getRow() - 1;
+        int col = move.getEndPosition().getColumn() - 1;
+
+        ChessPiece piece = board.squares[row][col];
+
+        return piece != null && piece.getTeamColor() == myPiece.getTeamColor();
     }
 
     private boolean evaluateMoveAndCheckStop(ChessBoard board,
