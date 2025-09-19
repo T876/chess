@@ -123,15 +123,15 @@ public class MovementUtils {
                 ChessMove captureLeftMove = new ChessMove(myPosition, captureLeft, null);
                 ChessMove captureRightMove = new ChessMove(myPosition, captureRight, null);
 
-                if(!isBlocked(board, forwardMove, myPiece)) {
+                if(!isBlocked(board, forward, myPiece)) {
                     moves.add(forwardMove);
                 }
 
-                if (willCapturePiece(board, captureLeftMove, myPiece)) {
+                if (willCapturePiece(board, captureLeft, myPiece)) {
                     moves.add(captureLeftMove);
                 }
 
-                if (willCapturePiece(board, captureRightMove, myPiece)) {
+                if (willCapturePiece(board, captureRight, myPiece)) {
                     moves.add(captureLeftMove);
                 }
             } else {
@@ -149,17 +149,13 @@ public class MovementUtils {
         return false;
     }
 
-    private boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
-        int row = move.getEndPosition().getRow() - 1;
-        int col = move.getEndPosition().getColumn() - 1;
-
-        ChessPiece piece = board.squares[row][col];
-
+    private boolean willCapturePiece(ChessBoard board, ChessPosition endPosition, ChessPiece myPiece) {
+        ChessPiece piece = board.getPiece(endPosition);
         return piece != null && piece.getTeamColor() != myPiece.getTeamColor();
     }
 
-    private boolean isBlocked(ChessBoard board, ChessMove move, ChessPiece myPiece) {
-        ChessPiece piece = board.getPiece(move.getEndPosition());
+    private boolean isBlocked(ChessBoard board, ChessPosition endPosition, ChessPiece myPiece) {
+        ChessPiece piece = board.getPiece(endPosition);
 
         return piece != null && piece.getTeamColor() == myPiece.getTeamColor();
     }
@@ -185,10 +181,10 @@ public class MovementUtils {
                                        ChessPiece piece,
                                        Collection<ChessMove> moves) {
 
-        if(willCapturePiece(board, move, piece)) {
+        if(willCapturePiece(board, move.getEndPosition(), piece)) {
             moves.add(move);
             return true;
-        } else if (isBlocked(board, move, piece)) {
+        } else if (isBlocked(board, move.getEndPosition(), piece)) {
             return true;
         } else {
             moves.add(move);
