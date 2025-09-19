@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MovementUtils {
-    Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPiece piece, ChessPosition myPosition) {
+    Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
         // Get the code-accurate numbers
@@ -64,7 +64,7 @@ public class MovementUtils {
         return moves;
     }
 
-    Collection<ChessMove> getStraightLineMoves (ChessBoard board, ChessPiece piece, ChessPosition myPosition) {
+    Collection<ChessMove> getStraightLineMoves (ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
         // Get the board-accurate numbers
@@ -98,6 +98,8 @@ public class MovementUtils {
 
         return moves;
     }
+
+
 
     private boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
         int row = move.getEndPosition().getRow() - 1;
