@@ -141,8 +141,8 @@ public class MovementUtils {
             }
         }
 
-        for (int i = boardRow - 1; i > 0; i--) { // down
-            ChessPosition end = new ChessPosition(i, boardCol);
+        for (int i = boardCol + 1; i <= 8; i++) { // right
+            ChessPosition end = new ChessPosition(boardRow, i);
             ChessMove move = new ChessMove(start, end, null);
 
             if(willCapturePiece(board, move, piece)) {
@@ -155,8 +155,8 @@ public class MovementUtils {
             }
         }
 
-        for (int i = boardCol + 1; i <= 8; i++) { // right
-            ChessPosition end = new ChessPosition(boardRow, i);
+        for (int i = boardRow - 1; i > 0; i--) { // down
+            ChessPosition end = new ChessPosition(i, boardCol);
             ChessMove move = new ChessMove(start, end, null);
 
             if(willCapturePiece(board, move, piece)) {
