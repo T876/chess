@@ -60,12 +60,15 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
         if (piece.getPieceType() == PieceType.BISHOP) {
-            moves.addAll(utils.getDiagonalMoves(board, myPosition));
+            moves.addAll(utils.getDiagonalMoves(board, myPosition, false));
         } else if (piece.getPieceType() == PieceType.ROOK) {
-            moves.addAll(utils.getStraightLineMoves(board, myPosition));
+            moves.addAll(utils.getStraightLineMoves(board, myPosition, false));
         } else if (piece.getPieceType() == PieceType.QUEEN) {
-            moves.addAll(utils.getDiagonalMoves(board, myPosition));
-            moves.addAll(utils.getStraightLineMoves(board, myPosition));
+            moves.addAll(utils.getDiagonalMoves(board, myPosition, false));
+            moves.addAll(utils.getStraightLineMoves(board, myPosition, false));
+        } else if (piece.getPieceType() == PieceType.KING) {
+            moves.addAll(utils.getDiagonalMoves(board, myPosition, true));
+            moves.addAll(utils.getStraightLineMoves(board, myPosition, true));
         }
         return moves;
     }

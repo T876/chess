@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MovementUtils {
-    Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition myPosition) {
+    Collection<ChessMove> getDiagonalMoves(ChessBoard board, ChessPosition myPosition, boolean adjacentOnly) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
         // Get the board-accurate numbers
@@ -17,7 +17,8 @@ public class MovementUtils {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow + i, boardCol + i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow + i, boardCol + i)
+                    || adjacentOnly) {
                 break;
             }
         }
@@ -28,7 +29,8 @@ public class MovementUtils {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow - i, boardCol + i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow - i, boardCol + i)
+                    || adjacentOnly) {
                 break;
             }
         }
@@ -39,7 +41,8 @@ public class MovementUtils {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow - i, boardCol - i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow - i, boardCol - i)
+                    || adjacentOnly) {
                 break;
             }
         }
@@ -50,7 +53,8 @@ public class MovementUtils {
                 break;
             }
 
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow + i, boardCol - i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow + i, boardCol - i)
+                    || adjacentOnly) {
                 break;
             }
         }
@@ -58,7 +62,7 @@ public class MovementUtils {
         return moves;
     }
 
-    Collection<ChessMove> getStraightLineMoves (ChessBoard board, ChessPosition myPosition) {
+    Collection<ChessMove> getStraightLineMoves (ChessBoard board, ChessPosition myPosition, boolean adjacentOnly) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
 
         // Get the board-accurate numbers
@@ -66,35 +70,35 @@ public class MovementUtils {
         int boardCol = myPosition.getColumn();
 
         for (int i = boardRow + 1; i <= 8; i++) { // up
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, i, boardCol)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, i, boardCol)
+                    || adjacentOnly) {
                 break;
             }
         }
 
         for (int i = boardCol + 1; i <= 8; i++) { // right
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow, i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow, i)
+                    || adjacentOnly) {
                 break;
             }
         }
 
         for (int i = boardRow - 1; i > 0; i--) { // down
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, i, boardCol)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, i, boardCol)
+                    || adjacentOnly) {
                 break;
             }
         }
 
         for (int i = boardCol - 1; i > 0; i--) { // left
-            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow, i)) {
+            if (evaluateMoveAndCheckStop(board, myPosition, moves, boardRow, i)
+                    || adjacentOnly) {
                 break;
             }
         }
 
         return moves;
     }
-
-//    Collection<ChessMove> getPewnMoves(ChessBoard board, ChessPosition position) {
-//
-//    }
 
     private boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
         int row = move.getEndPosition().getRow() - 1;
