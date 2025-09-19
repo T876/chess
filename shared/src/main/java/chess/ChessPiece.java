@@ -69,6 +69,8 @@ public class ChessPiece {
         } else if (piece.getPieceType() == PieceType.KING) {
             moves.addAll(utils.getDiagonalMoves(board, myPosition, true));
             moves.addAll(utils.getStraightLineMoves(board, myPosition, true));
+        } else if (piece.getPieceType() == PieceType.PAWN) {
+            moves.addAll(utils.getPawnMoves(board, myPosition));
         }
         return moves;
     }

@@ -100,6 +100,55 @@ public class MovementUtils {
         return moves;
     }
 
+    Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition) {
+        ChessPiece myPiece = board.getPiece(myPosition);
+        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        int startRow = myPosition.getRow();
+        int startCol = myPosition.getColumn();
+
+        int rowAdvancer = myPiece.getTeamColor() == ChessGame.TeamColor.WHITE ? 1 : -1;
+
+        boolean shouldPromote = shouldPromotePiece(myPiece.getTeamColor(), startRow);
+
+        // Make sure we aren't moving off the board
+        if (startRow + rowAdvancer >= 1 && startRow + rowAdvancer <= 8) {
+            // Initialize possible moves (null promotion for now, We'll check those later
+            ChessPosition forward = new ChessPosition(startRow + rowAdvancer, startCol);
+            ChessPosition captureLeft = new ChessPosition(startRow + rowAdvancer, startCol - 1);
+            ChessPosition captureRight = new ChessPosition(startRow + rowAdvancer, startCol + 1);
+
+            if (!shouldPromote) {
+                // Initialize our moves
+                ChessMove forwardMove = new ChessMove(myPosition, forward, null);
+                ChessMove captureLeftMove = new ChessMove(myPosition, captureLeft, null);
+                ChessMove captureRightMove = new ChessMove(myPosition, captureRight, null);
+
+                if(!isBlocked(board, forwardMove, myPiece)) {
+                    moves.add(forwardMove);
+                }
+
+                if (willCapturePiece(board, captureLeftMove, myPiece)) {
+                    moves.add(captureLeftMove);
+                }
+
+                if (willCapturePiece(board, captureRightMove, myPiece)) {
+                    moves.add(captureLeftMove);
+                }
+            } else {
+
+            }
+        }
+
+        return moves;
+    }
+
+    private void addPromotionMoves(ChessPosition start, ChessPosition end, Collection<ChessMove> moves) {
+    }
+
+    private boolean shouldPromotePiece(ChessGame.TeamColor color, int startRow) {
+        return false;
+    }
+
     private boolean willCapturePiece(ChessBoard board, ChessMove move, ChessPiece myPiece) {
         int row = move.getEndPosition().getRow() - 1;
         int col = move.getEndPosition().getColumn() - 1;
@@ -110,10 +159,7 @@ public class MovementUtils {
     }
 
     private boolean isBlocked(ChessBoard board, ChessMove move, ChessPiece myPiece) {
-        int row = move.getEndPosition().getRow() - 1;
-        int col = move.getEndPosition().getColumn() - 1;
-
-        ChessPiece piece = board.squares[row][col];
+        ChessPiece piece = board.getPiece(move.getEndPosition());
 
         return piece != null && piece.getTeamColor() == myPiece.getTeamColor();
     }
