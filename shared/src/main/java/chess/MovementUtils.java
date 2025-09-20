@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class MovementUtils {
@@ -100,6 +101,28 @@ public class MovementUtils {
         return moves;
     }
 
+    Collection<ChessMove> getKnightMoves (ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> moves = new ArrayList<ChessMove>();
+        ChessPiece myPiece = board.getPiece(myPosition);
+        Collection<ChessMove> potentialMoves = new ArrayList<ChessMove>(Arrays.asList(
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() + 1),null),
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn() - 1),null),
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() + 1),null),
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn() - 1),null),
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 2),null),
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 2),null),
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 2),null),
+                new ChessMove(myPosition, new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 2),null)
+        ));
+
+        for (ChessMove move : potentialMoves) {
+            if(positionIsInBounds(move.getEndPosition()) && !isBlocked(board, move.getEndPosition(), myPiece)) {
+                moves.add(move);
+            }
+        }
+        return moves;
+    }
+
     Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece myPiece = board.getPiece(myPosition);
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
@@ -188,8 +211,6 @@ public class MovementUtils {
 
     private boolean isBlocked(ChessBoard board, ChessPosition endPosition, ChessPiece myPiece) {
         ChessPiece piece = board.getPiece(endPosition);
-        ChessGame.TeamColor otherColor = piece.getTeamColor();
-        ChessGame.TeamColor myColor = myPiece.getTeamColor();
 
         return piece != null && piece.getTeamColor() == myPiece.getTeamColor();
     }

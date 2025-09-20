@@ -72,6 +72,8 @@ public class ChessPiece {
             moves.addAll(utils.getStraightLineMoves(board, myPosition, true));
         } else if (piece.getPieceType() == PieceType.PAWN) {
             moves.addAll(utils.getPawnMoves(board, myPosition));
+        } else if (piece.getPieceType() == PieceType.KNIGHT) {
+            moves.addAll(utils.getKnightMoves(board, myPosition));
         }
         return moves;
     }
