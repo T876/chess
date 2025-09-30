@@ -49,6 +49,10 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        // Create a deep copy of the board
+        // Make the move
+        // Check to see if your team is in check
+        // If they are, this move isn't valid
         throw new RuntimeException("Not implemented");
     }
 
@@ -59,6 +63,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        // Use validMoves to check the start position and get a list of end positions
+        // Make sure the end position is in the list
+        // If not, return false
         // TODO: implement this
     }
 
@@ -69,7 +76,11 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // Create a set of all "capture" moves for the opposing team
+        // In most cases, this will be all available moves. Unless you're a pawn and you suck
+        // Check the position of the King against that set
+        // Return true/false
+        throw new RuntimeException("BAD HOOMAN");
     }
 
     /**
@@ -79,6 +90,8 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+        // Call the validMoves function on each piece in the board
+        // If everything is still empty, return true
         throw new RuntimeException("Not implemented");
     }
 
@@ -90,6 +103,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        // Similar to isInCheckmate, but only if the team IS NOT in check
         throw new RuntimeException("Not implemented");
     }
 
