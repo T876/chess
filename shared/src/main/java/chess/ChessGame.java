@@ -78,26 +78,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // Construct a set of all moves dangerous to the king
-        Set<ChessPosition> pieceCaptureSet = new HashSet<>();
-        ChessPosition kingsPosition = null;
-        for (int i = 1; i <= 8; i++) {
-            for(int j = 1; i <=8; i++) {
-                ChessPosition posToCheck = new ChessPosition(i, j);
-                ChessPiece pieceToCheck = currentBoard.getPiece(posToCheck);
-                if (pieceToCheck.getPieceType() == ChessPiece.PieceType.KING && pieceToCheck.getTeamColor() == teamColor) {
-                    kingsPosition = posToCheck;
-                    continue;
-                }
-                addOpposingMovesToSet(pieceCaptureSet, posToCheck, pieceToCheck, teamColor);
-            }
-        }
-
-        if (kingsPosition == null) {
-            return false;
-        }
-
-        return pieceCaptureSet.contains(kingsPosition);
+        return currentBoard.isInCheck(teamColor);
     }
 
     private void addOpposingMovesToSet(

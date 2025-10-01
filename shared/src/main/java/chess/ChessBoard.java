@@ -83,6 +83,22 @@ public class ChessBoard {
         }
     }
 
+    public boolean isInCheck(ChessGame.TeamColor teamColor) {
+        for(int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPiece pieceToCheck = getPiece(new ChessPosition(i, j));
+                if (canCaptureKing(teamColor, pieceToCheck)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean canCaptureKing(ChessGame.TeamColor kingColor, ChessPiece pieceToCheck) {
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
