@@ -17,6 +17,12 @@ public class ChessBoard {
         
     }
 
+    public ChessBoard(ChessBoard copy) {
+        for(int i = 0; i < 8; i++) {
+            System.arraycopy(copy.squares[i], 0, squares[i], 0, 8);
+        }
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
