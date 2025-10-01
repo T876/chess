@@ -1,7 +1,9 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -76,11 +78,43 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // Create a set of all "capture" moves for the opposing team
-        // In most cases, this will be all available moves. Unless you're a pawn and you suck
-        // Check the position of the King against that set
-        // Return true/false
-        throw new RuntimeException("BAD HOOMAN");
+        // Construct a set of all moves dangerous to the king
+        Set<ChessPosition> pieceCaptureSet = new HashSet<>();
+        ChessPosition kingsPosition = null;
+        for (int i = 1; i <= 8; i++) {
+            for(int j = 1; i <=8; i++) {
+                ChessPosition posToCheck = new ChessPosition(i, j);
+                ChessPiece pieceToCheck = currentBoard.getPiece(posToCheck);
+                if (pieceToCheck.getPieceType() == ChessPiece.PieceType.KING && pieceToCheck.getTeamColor() == teamColor) {
+                    kingsPosition = posToCheck;
+                    continue;
+                }
+                addOpposingMovesToSet(pieceCaptureSet, posToCheck, pieceToCheck, teamColor);
+            }
+        }
+
+        if (kingsPosition == null) {
+            return false;
+        }
+
+        return pieceCaptureSet.contains(kingsPosition);
+    }
+
+    private void addOpposingMovesToSet(
+            Set<ChessPosition> pieceCaptureSet,
+            ChessPosition posToCheck,
+            ChessPiece pieceToCheck,
+            TeamColor teamColor) {
+
+        if (pieceToCheck == null) {
+            return;
+        }
+
+        if (pieceToCheck.getTeamColor() != teamColor) {
+            for (ChessMove move : pieceToCheck.pieceMoves(currentBoard, posToCheck)) {
+                pieceCaptureSet.add(move.getEndPosition());
+            }
+        }
     }
 
     /**
