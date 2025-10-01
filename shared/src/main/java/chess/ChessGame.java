@@ -81,22 +81,6 @@ public class ChessGame {
         return currentBoard.isInCheck(teamColor);
     }
 
-    private void addOpposingMovesToSet(
-            Set<ChessPosition> pieceCaptureSet,
-            ChessPosition posToCheck,
-            ChessPiece pieceToCheck,
-            TeamColor teamColor) {
-
-        if (pieceToCheck == null) {
-            return;
-        }
-
-        if (pieceToCheck.getTeamColor() != teamColor) {
-            for (ChessMove move : pieceToCheck.pieceMoves(currentBoard, posToCheck)) {
-                pieceCaptureSet.add(move.getEndPosition());
-            }
-        }
-    }
 
     /**
      * Determines if the given team is in checkmate
