@@ -1,9 +1,6 @@
 package chess;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -51,11 +48,25 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        // Create a deep copy of the board
-        // Make the move
-        // Check to see if your team is in check
-        // If they are, this move isn't valid
-        throw new RuntimeException("Not implemented");
+        // Get the data we need
+        ChessPiece currentPiece = currentBoard.getPiece(startPosition);
+        TeamColor currentColor = currentPiece.getTeamColor();
+        Collection<ChessMove> moves = currentPiece.pieceMoves(currentBoard, startPosition);
+        Collection<ChessMove> valMoves = new ArrayList<>();
+
+        // Deep Copy
+        ChessBoard testBoard = new ChessBoard(currentBoard);
+
+        // Test the move
+        for (ChessMove move : moves) {
+            testBoard.makeMove(move);
+            if (!testBoard.isInCheck(currentColor)){
+                valMoves.add(move);
+            }
+            testBoard = new ChessBoard(currentBoard);
+        }
+
+        return valMoves;
     }
 
     /**
