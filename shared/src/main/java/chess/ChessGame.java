@@ -76,11 +76,30 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        // Use validMoves to check the start position and get a list of end positions
-        // Make sure the end position is in the list
-        // If not, return false
-        // TODO: implement this
+        ChessPiece currentPiece = currentBoard.getPiece(move.getStartPosition());
+        if (currentPiece == null) {
+            throw new InvalidMoveException();
+        }
+
+        if (currentPiece.getTeamColor() != teamTurn) {
+            throw new InvalidMoveException();
+        }
+
+        Collection<ChessMove> allValidMoves = validMoves(move.getStartPosition());
+        if (!allValidMoves.contains(move)) {
+            throw new InvalidMoveException();
+        }
+
+        currentBoard.makeMove(move);
+        if (teamTurn == TeamColor.BLACK) {
+            teamTurn = TeamColor.WHITE;
+        } else {
+            teamTurn = TeamColor.BLACK;
+        }
     }
+
+
+
 
     /**
      * Determines if the given team is in check

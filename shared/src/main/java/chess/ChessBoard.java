@@ -140,7 +140,12 @@ public class ChessBoard {
     public void makeMove(ChessMove move) {
         ChessPiece piece = getPiece(move.getStartPosition());
         squares[move.getStartPosition().getRow() - 1][move.getStartPosition().getColumn() - 1] = null;
-        squares[move.getEndPosition().getRow() - 1][move.getEndPosition().getColumn() - 1] = piece;
+        if (move.getPromotionPiece() == null) {
+            squares[move.getEndPosition().getRow() - 1][move.getEndPosition().getColumn() - 1] = piece;
+        } else {
+            ChessPiece promotedPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+            squares[move.getEndPosition().getRow() - 1][move.getEndPosition().getColumn() - 1] = promotedPiece;
+        }
     }
 
     @Override
