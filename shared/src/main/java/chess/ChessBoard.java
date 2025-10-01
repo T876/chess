@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -84,10 +85,11 @@ public class ChessBoard {
     }
 
     public boolean isInCheck(ChessGame.TeamColor teamColor) {
-        for(int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                ChessPiece pieceToCheck = getPiece(new ChessPosition(i, j));
-                if (canCaptureKing(teamColor, pieceToCheck)) {
+        for(int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition posToCheck = new ChessPosition(i, j);
+                ChessPiece pieceToCheck = getPiece(posToCheck);
+                if (canCaptureKing(teamColor, pieceToCheck, posToCheck)) {
                     return true;
                 }
             }
@@ -95,7 +97,33 @@ public class ChessBoard {
         return false;
     }
 
-    public boolean canCaptureKing(ChessGame.TeamColor kingColor, ChessPiece pieceToCheck) {
+    public boolean canCaptureKing(
+            ChessGame.TeamColor kingColor,
+            ChessPiece pieceToCheck,
+            ChessPosition piecePosition) {
+        if (pieceToCheck == null) {
+            return false;
+        }
+
+        if (pieceToCheck.getTeamColor() == kingColor) {
+            return false;
+        }
+
+        Collection<ChessMove> moves = pieceToCheck.pieceMoves(this, piecePosition);
+
+        for (ChessMove move : moves) {
+            ChessPiece endPiece = getPiece(move.getEndPosition());
+
+            if (endPiece == null) {
+                continue;
+            }
+
+            if (endPiece.getPieceType() == ChessPiece.PieceType.KING
+                    && endPiece.getTeamColor() == kingColor) {
+                return true;
+            }
+        }
+
         return false;
     }
 
