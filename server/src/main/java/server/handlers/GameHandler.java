@@ -1,31 +1,31 @@
 package server.handlers;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
-import service.models.LoginRequest;
-import service.models.RegisterRequest;
+import service.models.CreateGameRequest;
+import service.models.JoinGameRequest;
 
-public class UserHandler {
+public class GameHandler {
     private final Gson serializer;
 
-    public UserHandler() {
+    public GameHandler() {
         this.serializer = new Gson();
     }
 
-    public void register(Context context) {
-        RegisterRequest request = serializer.fromJson(context.body(), RegisterRequest.class);
+    public void listGames(Context context) {
         String response = serializer.toJson(new Object());
         context.status(200);
         context.json(response);
     }
 
-    public void login(Context context) {
-        LoginRequest request = serializer.fromJson(context.body(), LoginRequest.class);
+    public void createGame(Context context) {
+        CreateGameRequest request = serializer.fromJson(context.body(), CreateGameRequest.class);
         String response = serializer.toJson(new Object());
         context.status(200);
         context.json(response);
     }
 
-    public void logout(Context context) {
+    public void joinGame(Context context) {
+        JoinGameRequest request = serializer.fromJson(context.body(), JoinGameRequest.class);
         String response = serializer.toJson(new Object());
         context.status(200);
         context.json(response);
