@@ -13,9 +13,12 @@ public class Server {
         // Handlers
         UserHandler userHandler = new UserHandler();
 
-        // Endpoints
-        javalin.post("/user", userHandler::register);
+        // ## Endpoints ##
 
+        // User management endpoint
+        javalin.post("/user", userHandler::register);
+        javalin.post("/session", userHandler::login);
+        javalin.delete("/session", userHandler::logout);
     }
 
     public int run(int desiredPort) {
