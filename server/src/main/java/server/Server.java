@@ -4,6 +4,7 @@ import io.javalin.*;
 import server.handlers.DestructionHandler;
 import server.handlers.GameHandler;
 import server.handlers.UserHandler;
+import service.GameService;
 import service.UserService;
 
 public class Server {
@@ -15,10 +16,11 @@ public class Server {
 
         // Services
         UserService userService = new UserService();
+        GameService gameService = new GameService();
 
         // Handlers
         UserHandler userHandler = new UserHandler(userService);
-        GameHandler gameHandler = new GameHandler();
+        GameHandler gameHandler = new GameHandler(gameService);
         DestructionHandler destructionHandler = new DestructionHandler();
 
         // ## Endpoints ##
