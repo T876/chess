@@ -4,6 +4,7 @@ import io.javalin.*;
 import server.handlers.DestructionHandler;
 import server.handlers.GameHandler;
 import server.handlers.UserHandler;
+import service.UserService;
 
 public class Server {
 
@@ -12,8 +13,11 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
+        // Services
+        UserService userService = new UserService();
+
         // Handlers
-        UserHandler userHandler = new UserHandler();
+        UserHandler userHandler = new UserHandler(userService);
         GameHandler gameHandler = new GameHandler();
         DestructionHandler destructionHandler = new DestructionHandler();
 
