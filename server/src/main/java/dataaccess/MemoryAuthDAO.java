@@ -1,12 +1,12 @@
-package dataaccess.interfaces;
+package dataaccess;
 
 
-import dataaccess.DataAccessException;
+import dataaccess.interfaces.IAuthDAO;
 import model.AuthData;
 
 import java.util.UUID;
 
-public class MemoryAuthDAO implements  IAuthDAO{
+public class MemoryAuthDAO implements IAuthDAO {
     public MemoryAuthDAO() {
 
     };
