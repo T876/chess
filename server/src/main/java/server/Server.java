@@ -1,5 +1,11 @@
 package server;
 
+import dataaccess.MemoryAuthDAO;
+import dataaccess.MemoryGameDAO;
+import dataaccess.MemoryUserDAO;
+import dataaccess.interfaces.IAuthDAO;
+import dataaccess.interfaces.IGameDAO;
+import dataaccess.interfaces.IUserDAO;
 import io.javalin.*;
 import server.handlers.DestructionHandler;
 import server.handlers.GameHandler;
@@ -15,10 +21,15 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
+        // Data Access
+        IAuthDAO authDAO = new MemoryAuthDAO();
+        IUserDAO userDAO = new MemoryUserDAO();
+        IGameDAO gameDAO = new MemoryGameDAO();
+
         // Services
-        UserService userService = new UserService();
-        GameService gameService = new GameService();
-        DestructionService destructionService = new DestructionService();
+        UserService userService = new UserService(authDAO, userDAO);
+        GameService gameService = new GameService(authDAO, gameDAO);
+        DestructionService destructionService = new DestructionService(authDAO, userDAO, gameDAO);
 
         // Handlers
         UserHandler userHandler = new UserHandler(userService);
