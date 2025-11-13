@@ -1,6 +1,7 @@
 package dataaccess.interfaces;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
 import model.GameData;
 import service.models.GameListResponse;
 
@@ -11,11 +12,11 @@ public interface IGameDAO {
     public String createGame(String name);
 
     // Read
-    public GameData getGame(String gameID);
+    public GameData getGame(String gameID) throws DataAccessException;
     public List<GameData> getAllGames();
 
     // Update
-    public void joinGame(ChessGame.TeamColor color, String gameID);
+    public void joinGame(ChessGame.TeamColor color, String gameID) throws DataAccessException;
 
     // Delete
     public void clear();
