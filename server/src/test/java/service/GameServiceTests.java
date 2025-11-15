@@ -8,8 +8,7 @@ import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
 import dataaccess.interfaces.IUserDAO;
 import org.junit.jupiter.api.*;
-import service.models.GameListResponse;
-import service.models.RegisterRequest;
+import service.models.*;
 
 import java.util.ArrayList;
 
@@ -69,6 +68,60 @@ public class GameServiceTests {
     public void listGamesUnauthorized() {
         assertThrows(DataAccessException.class, () -> {
             gameService.listGames("fakeToken");
+        });
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Create Game Successful")
+    public void createGameSuccessful() {
+        CreateGameRequest request = new CreateGameRequest("Game1");
+        CreateGameResponse response;
+
+        try {
+            response = gameService.createGame(this.authToken, request);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(1, response.gameID());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Create game unauthorized")
+    public void createGameUnauthorized() {
+        assertThrows(DataAccessException.class, () -> {
+            gameService.createGame("fakeToken", new CreateGameRequest("Game1"));
+        });
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Join game Successful")
+    public void joinGameSuccessful() {
+        CreateGameRequest request = new CreateGameRequest("Game1");
+        CreateGameResponse createResponse;
+
+        try {
+            createResponse = gameService.createGame(this.authToken, request);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        JoinGameRequest joinRequest = new JoinGameRequest("WHITE", createResponse.gameID());
+
+        Assertions.assertDoesNotThrow(() -> {
+            gameService.joinGame(this.authToken, joinRequest);
+        });
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Create game unauthorized")
+    public void joinGameUnauthorized() {
+        assertThrows(DataAccessException.class, () -> {
+            gameService.joinGame("fakeToken", new JoinGameRequest("WHITE", 1));
         });
     }
 }
