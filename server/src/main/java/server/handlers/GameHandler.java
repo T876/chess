@@ -102,7 +102,21 @@ public class GameHandler {
             return;
         }
 
-        this.gameService.joinGame(auth, request);
+
+
+        try{
+            this.gameService.joinGame(auth, request);
+        } catch (DataAccessException e) {
+            if (Objects.equals(e.getMessage(), "Error: unauthorized")) {
+                this.returnErrorResponse(context, 401, e.getMessage());
+            } else if (Objects.equals(e.getMessage(), "Error: already taken")) {
+                this.returnErrorResponse(context, 403, e.getMessage());
+            }
+            return;
+        } catch (Exception e) {
+            this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+            return;
+        }
         String responseJson = serializer.toJson(new Object());
 
         context.status(200);

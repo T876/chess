@@ -8,7 +8,7 @@ public interface IAuthDAO {
     public AuthData makeAuthData(String username);
 
     // Read
-    public boolean verifyAuthToken(String authToken) throws DataAccessException;
+    public AuthData verifyAuthToken(String authToken) throws DataAccessException;
 
     // Delete
     public void logout(String authToken) throws DataAccessException;

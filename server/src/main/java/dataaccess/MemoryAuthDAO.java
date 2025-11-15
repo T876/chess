@@ -22,10 +22,10 @@ public class MemoryAuthDAO implements IAuthDAO {
         return newAuth;
     };
 
-    public boolean verifyAuthToken(String authToken) throws DataAccessException {
+    public AuthData verifyAuthToken(String authToken) throws DataAccessException {
         for (AuthData session: sessions) {
             if (Objects.equals(session.authToken(), authToken)) {
-                return true;
+                return session;
             }
         }
         throw new DataAccessException("Error: unauthorized");

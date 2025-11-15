@@ -3,6 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
+import model.AuthData;
 import model.GameData;
 import service.models.*;
 
@@ -34,5 +35,8 @@ public class GameService {
         return new CreateGameResponse(gameID);
     }
 
-    public void joinGame(String auth, JoinGameRequest request) { }
+    public void joinGame(String auth, JoinGameRequest request) throws DataAccessException {
+        AuthData authData = this.authDAO.verifyAuthToken(auth);
+        this.gameDAO.joinGame(request.playerColor(), request.gameID(), authData.username());
+    }
 }

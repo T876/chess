@@ -16,7 +16,7 @@ public interface IGameDAO {
     public List<GameData> getAllGames();
 
     // Update
-    public void joinGame(ChessGame.TeamColor color, String gameID) throws DataAccessException;
+    public void joinGame(String color, int gameID, String username) throws DataAccessException;
 
     // Delete
     public void clear();

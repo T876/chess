@@ -7,6 +7,7 @@ import model.GameData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MemoryGameDAO implements IGameDAO {
     List<GameData> games = new ArrayList<>();
@@ -33,8 +34,41 @@ public class MemoryGameDAO implements IGameDAO {
        return games;
     };
 
-    public void joinGame(ChessGame.TeamColor color, String gameID) throws DataAccessException {
+    public void joinGame(String color, int gameID, String username) throws DataAccessException {
+        GameData gameMatch = null;
+        for (GameData game: games) {
+            if (game.gameID() == gameID) {
+                gameMatch = game;
+            }
+        }
 
+        GameData newGame = null;
+
+        if (Objects.equals(color, "WHITE")) {
+            if (gameMatch.whiteUsername() == null) {
+                newGame = new GameData(gameMatch.gameID(),
+                        username,
+                        gameMatch.blackUsername(),
+                        gameMatch.gameName(),
+                        gameMatch.game());
+                games.remove(gameMatch);
+                games.add(newGame);
+                return;
+            }
+        } else if (Objects.equals(color, "BLACK")) {
+            if (gameMatch.blackUsername() == null) {
+                newGame = new GameData(gameMatch.gameID(),
+                        gameMatch.whiteUsername(),
+                        username,
+                        gameMatch.gameName(),
+                        gameMatch.game());
+                games.remove(gameMatch);
+                games.add(newGame);
+                return;
+            }
+        }
+
+        throw new DataAccessException("Error: already taken");
     };
 
     public void clear() {
