@@ -1,5 +1,6 @@
 package server.handlers;
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import service.UserService;
 import service.models.LoginRequest;
@@ -36,7 +37,18 @@ public class UserHandler {
             return;
         }
 
-        RegisterResponse response = userService.register(request);
+        RegisterResponse response;
+
+        try{
+            response = userService.register(request);
+        } catch (DataAccessException e) {
+            this.returnErrorResponse(context, 403, "Error: already taken");
+            return;
+        } catch (Exception e) {
+            this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+            return;
+        }
+
         String responseJson = serializer.toJson(response);
 
         context.status(200);

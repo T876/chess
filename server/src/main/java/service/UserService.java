@@ -1,18 +1,28 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IUserDAO;
+import model.AuthData;
+import model.UserData;
 import service.models.LoginRequest;
 import service.models.LoginResponse;
 import service.models.RegisterRequest;
 import service.models.RegisterResponse;
 
 public class UserService {
+    IUserDAO userDAO;
+    IAuthDAO authDAO;
 
-    public UserService(IAuthDAO authDAO, IUserDAO userDAO) {}
+    public UserService(IAuthDAO authDAO, IUserDAO userDAO) {
+        this.userDAO = userDAO;
+        this.authDAO = authDAO;
+    }
 
-    public RegisterResponse register (RegisterRequest request) {
-        return new RegisterResponse("username", "token");
+    public RegisterResponse register (RegisterRequest request) throws DataAccessException {
+        this.userDAO.createUser(new UserData(request.username(), request.password(), request.email()));
+        AuthData authData = this.authDAO.makeAuthData(request.username());
+        return new RegisterResponse(authData.username(), authData.authToken());
     }
 
     public LoginResponse login (LoginRequest request) {
