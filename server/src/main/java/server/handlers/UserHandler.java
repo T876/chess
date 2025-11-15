@@ -91,13 +91,22 @@ public class UserHandler {
         String auth;
 
         try {
-            auth = context.header("authToken");
+            auth = context.header("authorization");
         } catch(Exception e) {
             returnErrorResponse(context, 400, "Error: bad request");
             return;
         }
 
-        userService.logout(auth);
+        try{
+            userService.logout(auth);
+        } catch (DataAccessException e) {
+            this.returnErrorResponse(context, 401, e.getMessage());
+            return;
+        } catch (Exception e) {
+            this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+            return;
+        }
+
         String response = serializer.toJson(new Object());
 
         context.status(200);

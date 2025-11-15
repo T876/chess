@@ -31,5 +31,7 @@ public class UserService {
         return new LoginResponse(authData.username(), authData.authToken());
     }
 
-    public void logout(String authToken) { }
+    public void logout(String authToken) throws DataAccessException {
+        this.authDAO.logout(authToken);
+    }
 }

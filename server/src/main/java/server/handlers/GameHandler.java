@@ -27,7 +27,7 @@ public class GameHandler {
         String auth;
 
         try {
-            auth = context.header("authToken");
+            auth = context.header("authorization");
         } catch(Exception e) {
             returnErrorResponse(context, 400, "Error: bad request");
             return;
@@ -45,7 +45,7 @@ public class GameHandler {
         CreateGameRequest request;
 
         try {
-            auth = context.header("authToken");
+            auth = context.header("authorization");
             request = serializer.fromJson(context.body(), CreateGameRequest.class);
         } catch(Exception e) {
             returnErrorResponse(context, 400, "Error: bad request");
@@ -69,7 +69,7 @@ public class GameHandler {
         JoinGameRequest request;
 
         try {
-            auth = context.header("authToken");
+            auth = context.header("authorization");
             request = serializer.fromJson(context.body(), JoinGameRequest.class);
         } catch(Exception e) {
             returnErrorResponse(context, 400, "Error: bad request");
