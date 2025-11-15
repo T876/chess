@@ -12,6 +12,7 @@ import service.models.LoginResponse;
 import service.models.RegisterRequest;
 import service.models.RegisterResponse;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserServiceTests {
@@ -97,5 +98,30 @@ public class UserServiceTests {
         });
     }
 
+    @Test
+    @Order(5)
+    @DisplayName("Logout Success")
+    public void logoutSuccessful() {
+        RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+        RegisterResponse response;
 
+        try {
+            response = userService.register(registerRequest);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertDoesNotThrow(() -> {
+            userService.logout(response.authToken());
+        });
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Logout Unauthorized")
+    public void logoutUnauthorized() {
+        assertThrows(DataAccessException.class, () -> {
+            userService.logout("fakeToken");
+        });
+    }
 }
