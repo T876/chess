@@ -1,6 +1,5 @@
 package service;
 
-
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
@@ -12,7 +11,6 @@ import service.models.LoginResponse;
 import service.models.RegisterRequest;
 import service.models.RegisterResponse;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserServiceTests {
