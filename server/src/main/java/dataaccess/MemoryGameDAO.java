@@ -26,10 +26,6 @@ public class MemoryGameDAO implements IGameDAO {
         return gameID;
     };
 
-    public GameData getGame(String gameID) throws DataAccessException {
-        throw new DataAccessException("Not implemented");
-    };
-
     public List<GameData> getAllGames(){
        return games;
     };

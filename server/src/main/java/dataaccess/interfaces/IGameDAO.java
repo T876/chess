@@ -12,7 +12,6 @@ public interface IGameDAO {
     public int createGame(String name);
 
     // Read
-    public GameData getGame(String gameID) throws DataAccessException;
     public List<GameData> getAllGames();
 
     // Update
