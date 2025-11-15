@@ -28,7 +28,13 @@ public class MemoryUserDAO implements IUserDAO {
     };
 
     public boolean verifyUser(String username, String password) throws DataAccessException {
-        return true;
+        for(UserData user :users) {
+            if (Objects.equals(user.username(), username)
+                    && Objects.equals(user.password(), password)) {
+                return true;
+            }
+        }
+       throw new DataAccessException("Error: Unauthorized");
     };
 
     public void clear() {

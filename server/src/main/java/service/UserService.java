@@ -25,8 +25,10 @@ public class UserService {
         return new RegisterResponse(authData.username(), authData.authToken());
     }
 
-    public LoginResponse login (LoginRequest request) {
-        return new LoginResponse("username", "token");
+    public LoginResponse login (LoginRequest request) throws DataAccessException {
+        this.userDAO.verifyUser(request.username(), request.password());
+        AuthData authData = this.authDAO.makeAuthData(request.username());
+        return new LoginResponse(authData.username(), authData.authToken());
     }
 
     public void logout(String authToken) { }
