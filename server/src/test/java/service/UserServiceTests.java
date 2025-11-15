@@ -7,6 +7,8 @@ import dataaccess.MemoryUserDAO;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IUserDAO;
 import org.junit.jupiter.api.*;
+import service.models.LoginRequest;
+import service.models.LoginResponse;
 import service.models.RegisterRequest;
 import service.models.RegisterResponse;
 
@@ -64,4 +66,36 @@ public class UserServiceTests {
             userService.register(requestDuplicate);
         });
     }
+
+    @Test
+    @Order(3)
+    @DisplayName("Login Success")
+    public void loginSuccessful() {
+        RegisterRequest registerRequest = new RegisterRequest("username", "password", "email");
+        LoginRequest loginRequest = new LoginRequest("username", "password");
+        LoginResponse response;
+
+        try {
+            userService.register(registerRequest);
+            response = userService.login(loginRequest);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(loginRequest.username(), response.username());
+        Assertions.assertNotNull(response.authToken());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Login unauthorized")
+    public void loginUnauthorized() {
+        LoginRequest loginRequest = new LoginRequest("username", "password");
+
+        assertThrows(DataAccessException.class, () -> {
+            userService.login(loginRequest);
+        });
+    }
+
+
 }
