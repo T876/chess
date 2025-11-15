@@ -12,6 +12,11 @@ public class DestructionHandler {
         this.destructionService = destructionService;
     }
 
+    void returnErrorResponse(Context context, int status, String message) {
+        context.status(status);
+        context.json(serializer.toJson(new ErrorBody(message)));
+    }
+
     public void clearApplication(Context context) {
         this.destructionService.clearApplication();
         String response = serializer.toJson(new Object());
