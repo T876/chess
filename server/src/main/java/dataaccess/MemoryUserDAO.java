@@ -38,6 +38,6 @@ public class MemoryUserDAO implements IUserDAO {
     };
 
     public void clear() {
-
+        this.users = new ArrayList<>();
     };
 }

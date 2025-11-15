@@ -28,8 +28,10 @@ public class GameService {
         return response;
     }
 
-    public CreateGameResponse createGame(String auth, CreateGameRequest request) {
-        return new CreateGameResponse(1234);
+    public CreateGameResponse createGame(String auth, CreateGameRequest request)throws DataAccessException {
+        this.authDAO.verifyAuthToken(auth);
+        int gameID = this.gameDAO.createGame(request.gameName());
+        return new CreateGameResponse(gameID);
     }
 
     public void joinGame(String auth, JoinGameRequest request) { }

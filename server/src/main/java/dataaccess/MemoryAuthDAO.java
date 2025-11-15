@@ -48,5 +48,7 @@ public class MemoryAuthDAO implements IAuthDAO {
         sessions.remove(match);
     }
 
-    public void clear() {};
+    public void clear() {
+        this.sessions = new ArrayList<>();
+    };
 }

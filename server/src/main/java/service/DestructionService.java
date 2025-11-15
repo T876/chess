@@ -5,9 +5,19 @@ import dataaccess.interfaces.IGameDAO;
 import dataaccess.interfaces.IUserDAO;
 
 public class DestructionService {
-    public DestructionService(IAuthDAO authDAO, IUserDAO userDAO, IGameDAO gameDAO) {
+    IAuthDAO authDAO;
+    IUserDAO userDAO;
+    IGameDAO gameDAO;
 
+    public DestructionService(IAuthDAO authDAO, IUserDAO userDAO, IGameDAO gameDAO) {
+        this.authDAO = authDAO;
+        this.userDAO = userDAO;
+        this.gameDAO = gameDAO;
     }
 
-    public void clearApplication() { }
+    public void clearApplication() {
+        this.authDAO.clear();
+        this.userDAO.clear();
+        this.gameDAO.clear();
+    }
 }

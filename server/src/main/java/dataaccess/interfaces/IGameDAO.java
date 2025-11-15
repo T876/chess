@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IGameDAO {
     // Create
-    public String createGame(String name);
+    public int createGame(String name);
 
     // Read
     public GameData getGame(String gameID) throws DataAccessException;

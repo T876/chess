@@ -68,7 +68,17 @@ public class GameHandler {
             return;
         }
 
-        CreateGameResponse response = this.gameService.createGame(auth, request);
+        CreateGameResponse response;
+
+        try{
+            response = this.gameService.createGame(auth, request);
+        } catch (DataAccessException e) {
+            this.returnErrorResponse(context, 401, e.getMessage());
+            return;
+        } catch (Exception e) {
+            this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+            return;
+        }
         String responseJson = serializer.toJson(response);
 
         context.status(200);

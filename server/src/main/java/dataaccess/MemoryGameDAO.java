@@ -13,8 +13,16 @@ public class MemoryGameDAO implements IGameDAO {
 
     public  MemoryGameDAO() {};
 
-    public String createGame(String name) {
-        return "";
+    public int createGame(String name) {
+        int gameID = games.size() + 1;
+        games.add(new GameData(
+                gameID,
+                null,
+                null,
+                name,
+                new ChessGame()
+        ));
+        return gameID;
     };
 
     public GameData getGame(String gameID) throws DataAccessException {
@@ -30,6 +38,6 @@ public class MemoryGameDAO implements IGameDAO {
     };
 
     public void clear() {
-
+        this.games = new ArrayList<>();
     };
 }
