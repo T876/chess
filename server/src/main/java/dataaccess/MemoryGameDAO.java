@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemoryGameDAO implements IGameDAO {
+    List<GameData> games = new ArrayList<>();
+
     public  MemoryGameDAO() {};
 
     public String createGame(String name) {
@@ -20,7 +22,7 @@ public class MemoryGameDAO implements IGameDAO {
     };
 
     public List<GameData> getAllGames(){
-       return new ArrayList<>();
+       return games;
     };
 
     public void joinGame(ChessGame.TeamColor color, String gameID) throws DataAccessException {

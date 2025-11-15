@@ -1,5 +1,6 @@
 package server.handlers;
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import service.GameService;
 import service.models.CreateGameRequest;
@@ -33,7 +34,17 @@ public class GameHandler {
             return;
         }
 
-        GameListResponse response = this.gameService.listGames(auth);
+        GameListResponse response;
+
+        try{
+            response = this.gameService.listGames(auth);
+        } catch (DataAccessException e) {
+            this.returnErrorResponse(context, 401, e.getMessage());
+            return;
+        } catch (Exception e) {
+            this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+            return;
+        }
         String responseJson = serializer.toJson(response);
 
         context.status(200);

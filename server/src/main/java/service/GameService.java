@@ -1,17 +1,31 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
+import model.GameData;
 import service.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameService {
-    public GameService(IAuthDAO authDAO, IGameDAO gameDAO) { }
+    IAuthDAO authDAO;
+    IGameDAO gameDAO;
 
-    public GameListResponse listGames(String auth) {
-        return new GameListResponse(new ArrayList<GameInfo>());
+    public GameService(IAuthDAO authDAO, IGameDAO gameDAO) {
+        this.gameDAO = gameDAO;
+        this.authDAO = authDAO;
+    }
+
+    public GameListResponse listGames(String auth)throws DataAccessException {
+        this.authDAO.verifyAuthToken(auth);
+        List<GameData> games = this.gameDAO.getAllGames();
+        GameListResponse response = new GameListResponse(new ArrayList<>());
+        for (GameData game : games) {
+            response.games().add(new GameInfo(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
+        }
+        return response;
     }
 
     public CreateGameResponse createGame(String auth, CreateGameRequest request) {
