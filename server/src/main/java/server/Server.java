@@ -1,8 +1,6 @@
 package server;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
 import dataaccess.interfaces.IUserDAO;
@@ -21,10 +19,19 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
+        IAuthDAO authDAO;
+        IUserDAO userDAO;
+        IGameDAO gameDAO;
+
         // Data Access
-        IAuthDAO authDAO = new MemoryAuthDAO();
-        IUserDAO userDAO = new MemoryUserDAO();
-        IGameDAO gameDAO = new MemoryGameDAO();
+        try{
+            authDAO = new MemoryAuthDAO();
+            userDAO = new MemoryUserDAO();
+            gameDAO = new SQLGameDAO();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
 
         // Services
         UserService userService = new UserService(authDAO, userDAO);
