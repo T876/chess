@@ -26,7 +26,7 @@ public class Server {
         // Data Access
         try{
             authDAO = new SQLAuthDAO();
-            userDAO = new MemoryUserDAO();
+            userDAO = new SQLUserDAO();
             gameDAO = new SQLGameDAO();
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
