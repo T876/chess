@@ -62,8 +62,30 @@ public class SQLUserDAO implements IUserDAO {
     }
 
     public boolean verifyUser(String username, String password) throws DataAccessException {
-        return true;
-    };
+        String hashedPass;
+
+        if (loginDataIsSanitized(username, password)) {
+            try(Connection c = DatabaseManager.getConnection()) {
+                hashedPass = queryUsers(c, username);
+                if (hashedPass == null) {
+                    throw new DataAccessException("Error: Unauthorized");
+                }
+
+                if (BCrypt.checkpw(password, hashedPass)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                throw new DataAccessException(e.getMessage());
+            }
+        }
+
+        throw new DataAccessException("Error: Unauthorized");
+    }
+
+    private boolean loginDataIsSanitized(String username, String password ) {
+        return username.matches("[a-zA-Z]+")
+               && password.matches("[a-zA-Z]+");
+    }
 
     public void clear() {
         String queryString = "TRUNCATE TABLE users";
