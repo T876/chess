@@ -1,8 +1,6 @@
 package service;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
 import dataaccess.interfaces.IUserDAO;
@@ -16,8 +14,13 @@ public class DestructionServiceTests {
 
     @BeforeAll
     public static void init() {
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
+        try {
+            userDAO = new SQLUserDAO();
+            authDAO = new SQLAuthDAO();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
         gameDAO = new MemoryGameDAO();
         destructionService = new DestructionService(authDAO, userDAO, gameDAO);
     }
