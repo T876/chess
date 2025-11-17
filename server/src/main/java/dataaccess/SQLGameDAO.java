@@ -23,7 +23,7 @@ public class SQLGameDAO implements IGameDAO {
 
     // Create
     public int createGame(String name){
-        String createUserString  = """
+        String createGameString  = """
                 INSERT INTO game (whiteUsername, blackUsername, gameName, chessGame) VALUES(?, ?, ?, ?);
                 """;
 
@@ -31,7 +31,7 @@ public class SQLGameDAO implements IGameDAO {
 
         String chessGameString = serializer.toJson(new ChessGame());
         try (Connection c = DatabaseManager.getConnection()) {
-            try (var query = c.prepareStatement(createUserString)){
+            try (var query = c.prepareStatement(createGameString)){
                 query.setString(1, null);
                 query.setString(2, null);
                 query.setString(3, name);
@@ -49,7 +49,7 @@ public class SQLGameDAO implements IGameDAO {
         return gameID;
     }
 
-    int queryGameByName(Connection c, String name) throws DataAccessException {
+    private int queryGameByName(Connection c, String name) throws DataAccessException {
         String getGameString = """
                 SELECT id FROM game WHERE gameName=?
                 """;
