@@ -20,8 +20,59 @@ public class SQLGameDAO implements IGameDAO {
 
     // Create
     public int createGame(String name){
-        return 1;
-    };
+        String createUserString  = """
+                INSERT INTO game (whiteUsername, blackUsername, gameName, chessGame) VALUES(?, ?, ?, ?);
+                """;
+
+        int gameID;
+        if (stringIsSanitized(name)) {
+            String chessGameString = serializer.toJson(new ChessGame());
+            try (Connection c = DatabaseManager.getConnection()) {
+                try (var query = c.prepareStatement(createUserString)){
+                    query.setString(1, null);
+                    query.setString(2, null);
+                    query.setString(3, name);
+                    query.setString(4, chessGameString);
+
+                    query.executeUpdate();
+                }
+
+                gameID = queryGameByName(c, name);
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Game creation failed");
+        }
+
+        return gameID;
+    }
+
+    int queryGameByName(Connection c, String name) throws DataAccessException {
+        String getGameString = """
+                SELECT id FROM game WHERE gameName=?
+                """;
+
+        int gameID = 0;
+        try (var query = c.prepareStatement(getGameString)) {
+            query.setString(1, name);
+
+            try (var result = query.executeQuery()) {
+                while (result.next()) {
+                    gameID =  result.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+
+        return gameID;
+    }
+
+    private boolean stringIsSanitized(String data) {
+        return data.matches("[a-zA-Z0-9]+");
+    }
 
     // Read
     public List<GameData> getAllGames(){

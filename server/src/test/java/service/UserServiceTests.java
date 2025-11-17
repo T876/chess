@@ -1,8 +1,6 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IUserDAO;
 import org.junit.jupiter.api.*;
@@ -20,8 +18,12 @@ public class UserServiceTests {
 
     @BeforeAll
     public static void init() {
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
+        try{
+            userDAO = new SQLUserDAO();
+            authDAO = new SQLAuthDAO();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         userService = new UserService(authDAO, userDAO);
     }
 
