@@ -93,9 +93,7 @@ public class SQLUserDAO implements IUserDAO {
             try (var query = c.prepareStatement(queryString)){
                 query.executeUpdate();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     };
