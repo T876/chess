@@ -61,7 +61,7 @@ public class SQLUserDAO implements IUserDAO {
         try(Connection c = DatabaseManager.getConnection()) {
             hashedPass = queryUsers(c, username);
             if (hashedPass == null) {
-                throw new DataAccessException("Error: Unauthorized");
+                throw new DataAccessException("Error: unauthorized");
             }
 
             if (BCrypt.checkpw(password, hashedPass)) {
@@ -71,7 +71,7 @@ public class SQLUserDAO implements IUserDAO {
             throw new DataAccessException(e.getMessage());
         }
 
-        throw new DataAccessException("Error: Unauthorized");
+        throw new DataAccessException("Error: unauthorized");
     }
 
     public void clear() {

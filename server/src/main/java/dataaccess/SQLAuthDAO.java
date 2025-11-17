@@ -92,7 +92,7 @@ public class SQLAuthDAO implements IAuthDAO {
                 query.executeUpdate();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     };
 

@@ -3,6 +3,8 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.DestructionService;
 
+import java.util.Objects;
+
 public class DestructionHandler {
     public final Gson serializer;
     public final DestructionService destructionService;
@@ -22,6 +24,7 @@ public class DestructionHandler {
             this.destructionService.clearApplication();
         } catch (Exception e) {
             this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+            return;
         }
 
         String response = serializer.toJson(new Object());

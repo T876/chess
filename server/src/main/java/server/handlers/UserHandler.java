@@ -84,7 +84,8 @@ public class UserHandler {
         try{
             response = userService.login(request);
         } catch (DataAccessException e) {
-            if (e.getMessage() == "Error: unauthorized") {
+            String message = e.getMessage();
+            if (Objects.equals(message, "Error: unauthorized")) {
                 this.returnErrorResponse(context, 401, e.getMessage());
             } else {
                 this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
