@@ -31,7 +31,7 @@ public class MemoryAuthDAO implements IAuthDAO {
         throw new DataAccessException("Error: unauthorized");
     };
 
-    public void logout(String authToken) throws DataAccessException {
+    public int logout(String authToken) throws DataAccessException {
         AuthData match = null;
 
         for (AuthData session: sessions) {
@@ -46,6 +46,7 @@ public class MemoryAuthDAO implements IAuthDAO {
         }
 
         sessions.remove(match);
+        return 0;
     }
 
     public void clear() {

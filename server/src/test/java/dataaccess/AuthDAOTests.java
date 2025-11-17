@@ -59,6 +59,7 @@ public class AuthDAOTests {
             authDAO.verifyAuthToken(result.authToken());
         });
     }
+
     @Test
     @Order(4)
     @DisplayName("Verify Auth Token Failure")
@@ -66,6 +67,36 @@ public class AuthDAOTests {
         Assertions.assertThrows(DataAccessException.class, () -> {
             authDAO.verifyAuthToken("Fake Token");
         });
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Logout Success")
+    public void logoutSuccess() {
+        AuthData result;
+        int logoutResult;
+        try{
+            result = authDAO.makeAuthData("username");
+            logoutResult = authDAO.logout(result.authToken());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(1, logoutResult);
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Logout Failure")
+    public void logoutFailure() {
+        int logoutResult;
+        try{
+            logoutResult = authDAO.logout("fake token");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(0, logoutResult);
     }
 
 }

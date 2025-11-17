@@ -73,12 +73,14 @@ public class SQLAuthDAO implements IAuthDAO {
         return null;
     }
 
-    public void logout(String authToken) throws DataAccessException {
+    public int logout(String authToken) throws DataAccessException {
         String queryString = "DELETE FROM auth WHERE authToken=?";
+        int result;
         try (Connection c = DatabaseManager.getConnection()) {
             try(var query = c.prepareStatement(queryString)) {
                 query.setString(1, authToken);
-                query.executeUpdate();
+                result = query.executeUpdate();
+                return result;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
