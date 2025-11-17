@@ -2,8 +2,6 @@ package dataaccess;
 
 import dataaccess.interfaces.IAuthDAO;
 import model.AuthData;
-import model.UserData;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.SQLException;
