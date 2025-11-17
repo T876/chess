@@ -42,10 +42,50 @@ public class SQLAuthDAO implements IAuthDAO {
     }
 
     public AuthData verifyAuthToken(String authToken) throws DataAccessException {
-        return new AuthData("token", "username");
+        String username;
+        try (var c = DatabaseManager.getConnection()) {
+            username = queryAuthData(c, authToken);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+        if (username == null) {
+            throw new DataAccessException("Error: Unauthorized");
+        }
+
+        return new AuthData(authToken, username);
     };
 
-    public void logout(String authToken) throws DataAccessException {};
+    String queryAuthData(Connection c, String authToken) throws DataAccessException {
+        String getUserString = """
+                SELECT username, authToken FROM auth WHERE authToken=?
+                """;
+
+        try (var query = c.prepareStatement(getUserString)) {
+            query.setString(1, authToken);
+            try (var result = query.executeQuery()) {
+                if (result.next()) {
+                    return result.getString("username");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public void logout(String authToken) throws DataAccessException {
+        String queryString = "DELETE FROM auth WHERE authToken=?";
+        try (Connection c = DatabaseManager.getConnection()) {
+            try(var query = c.prepareStatement(queryString)) {
+                query.setString(1, authToken);
+                query.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    };
 
     public void clear() {
         String queryString = "TRUNCATE TABLE auth";

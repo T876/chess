@@ -32,6 +32,7 @@ public class UserService {
     }
 
     public void logout(String authToken) throws DataAccessException {
+        this.authDAO.verifyAuthToken(authToken);
         this.authDAO.logout(authToken);
     }
 }
