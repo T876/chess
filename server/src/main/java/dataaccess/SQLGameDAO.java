@@ -3,12 +3,15 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.interfaces.IGameDAO;
+import model.AuthData;
 import model.GameData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class SQLGameDAO implements IGameDAO {
     Gson serializer;
@@ -100,11 +103,78 @@ public class SQLGameDAO implements IGameDAO {
         return games;
     };
 
+    GameData queryGameByID(Connection c, int id) throws DataAccessException {
+        String getGameString = """
+                SELECT id, whiteUsername, blackUsername, gameName, chessGame FROM game WHERE id=?
+                """;
 
+
+        try (var query = c.prepareStatement(getGameString)) {
+            query.setInt(1, id);
+
+            String whiteUsername;
+            String blackUsername;
+            String gameName;
+            String chessGameString;
+            ChessGame chessGame;
+
+            try (var result = query.executeQuery()) {
+                if (result.next()) {
+
+                    whiteUsername = result.getString("whiteUsername");
+                    blackUsername = result.getString("blackUsername");
+                    gameName = result.getString("gameName");
+                    chessGameString = result.getString("chessGame");
+
+                    chessGame = serializer.fromJson(chessGameString, ChessGame.class);
+
+                    return new GameData(id, whiteUsername, blackUsername, gameName, chessGame);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        throw new RuntimeException("Game not found");
+    }
 
     // Update
     public void joinGame(String color, int gameID, String username) throws DataAccessException {
+        String joinGameString;
 
+        if (Objects.equals(color, "WHITE")) {
+            joinGameString = """
+                UPDATE game SET whiteUsername=? WHERE id=?
+                """;
+        } else {
+            joinGameString = """
+                UPDATE game SET blackUsername=? WHERE id=?
+                """;
+        }
+
+        if (stringIsSanitized(username)) {
+            try (Connection c = DatabaseManager.getConnection()) {
+                GameData existingGame = queryGameByID(c, gameID);
+                if (Objects.equals(color, "WHITE") && existingGame.whiteUsername() != null) {
+                    throw new DataAccessException("Error: already taken");
+                } else if (existingGame.blackUsername() != null) {
+                    throw new DataAccessException("Error: already taken");
+                }
+
+                try (var query = c.prepareStatement(joinGameString)){
+                    query.setString(1, username);
+                    query.setInt(2, gameID);
+
+                    query.executeUpdate();
+                }
+            }catch (DataAccessException e) {
+                throw new DataAccessException(e.getMessage());
+            } catch  (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Session creation failed");
+        }
     };
 
     // Delete
