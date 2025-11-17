@@ -48,7 +48,7 @@ public class SQLAuthDAO implements IAuthDAO {
         }
 
         if (username == null) {
-            throw new DataAccessException("Error: Unauthorized");
+            throw new DataAccessException("Error: unauthorized");
         }
 
         return new AuthData(authToken, username);

@@ -18,7 +18,12 @@ public class DestructionHandler {
     }
 
     public void clearApplication(Context context) {
-        this.destructionService.clearApplication();
+        try {
+            this.destructionService.clearApplication();
+        } catch (Exception e) {
+            this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+        }
+
         String response = serializer.toJson(new Object());
         context.status(200);
         context.json(response);

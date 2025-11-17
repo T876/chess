@@ -17,21 +17,19 @@ public class SQLUserDAO implements IUserDAO {
         String createUserString  = """
                 INSERT INTO users (username, password, email) VALUES(?, ?, ?);
                 """;
-        if (userDataIsSanitized(data)) {
-            try (Connection c = DatabaseManager.getConnection()) {
-                if (queryUsers(c, data.username()) != null) {
-                    throw new DataAccessException("Error: already taken");
-                }
-                try (var query = c.prepareStatement(createUserString)){
-                    query.setString(1, data.username());
-                    query.setString(2, BCrypt.hashpw(data.password(), BCrypt.gensalt()));
-                    query.setString(3, data.email());
-
-                    query.executeUpdate();
-                }
-            } catch (SQLException e) {
-                throw new DataAccessException(e.getMessage());
+        try (Connection c = DatabaseManager.getConnection()) {
+            if (queryUsers(c, data.username()) != null) {
+                throw new DataAccessException("Error: already taken");
             }
+            try (var query = c.prepareStatement(createUserString)){
+                query.setString(1, data.username());
+                query.setString(2, BCrypt.hashpw(data.password(), BCrypt.gensalt()));
+                query.setString(3, data.email());
+
+                query.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
         }
     };
 
@@ -55,36 +53,23 @@ public class SQLUserDAO implements IUserDAO {
     }
 
 
-    private boolean userDataIsSanitized(UserData data) {
-        return data.username().matches("[a-zA-Z]+")
-                && data.password().matches("[a-zA-Z]+")
-                && data.email().matches("[a-zA-Z]+");
-    }
-
     public boolean verifyUser(String username, String password) throws DataAccessException {
         String hashedPass;
 
-        if (loginDataIsSanitized(username, password)) {
-            try(Connection c = DatabaseManager.getConnection()) {
-                hashedPass = queryUsers(c, username);
-                if (hashedPass == null) {
-                    throw new DataAccessException("Error: Unauthorized");
-                }
-
-                if (BCrypt.checkpw(password, hashedPass)) {
-                    return true;
-                }
-            } catch (Exception e) {
-                throw new DataAccessException(e.getMessage());
+        try(Connection c = DatabaseManager.getConnection()) {
+            hashedPass = queryUsers(c, username);
+            if (hashedPass == null) {
+                throw new DataAccessException("Error: Unauthorized");
             }
+
+            if (BCrypt.checkpw(password, hashedPass)) {
+                return true;
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
         }
 
         throw new DataAccessException("Error: Unauthorized");
-    }
-
-    private boolean loginDataIsSanitized(String username, String password ) {
-        return username.matches("[a-zA-Z]+")
-               && password.matches("[a-zA-Z]+");
     }
 
     public void clear() {

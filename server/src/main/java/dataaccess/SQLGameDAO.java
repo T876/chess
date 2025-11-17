@@ -28,25 +28,22 @@ public class SQLGameDAO implements IGameDAO {
                 """;
 
         int gameID;
-        if (stringIsSanitized(name)) {
-            String chessGameString = serializer.toJson(new ChessGame());
-            try (Connection c = DatabaseManager.getConnection()) {
-                try (var query = c.prepareStatement(createUserString)){
-                    query.setString(1, null);
-                    query.setString(2, null);
-                    query.setString(3, name);
-                    query.setString(4, chessGameString);
 
-                    query.executeUpdate();
-                }
+        String chessGameString = serializer.toJson(new ChessGame());
+        try (Connection c = DatabaseManager.getConnection()) {
+            try (var query = c.prepareStatement(createUserString)){
+                query.setString(1, null);
+                query.setString(2, null);
+                query.setString(3, name);
+                query.setString(4, chessGameString);
 
-                gameID = queryGameByName(c, name);
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+                query.executeUpdate();
             }
-        } else {
-            throw new RuntimeException("Game creation failed");
+
+            gameID = queryGameByName(c, name);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         return gameID;
@@ -73,9 +70,6 @@ public class SQLGameDAO implements IGameDAO {
         return gameID;
     }
 
-    private boolean stringIsSanitized(String data) {
-        return data.matches("[a-zA-Z0-9]+");
-    }
 
     // Read
     public List<GameData> getAllGames(){
@@ -152,28 +146,24 @@ public class SQLGameDAO implements IGameDAO {
                 """;
         }
 
-        if (stringIsSanitized(username)) {
-            try (Connection c = DatabaseManager.getConnection()) {
-                GameData existingGame = queryGameByID(c, gameID);
-                if (Objects.equals(color, "WHITE") && existingGame.whiteUsername() != null) {
-                    throw new DataAccessException("Error: already taken");
-                } else if (existingGame.blackUsername() != null) {
-                    throw new DataAccessException("Error: already taken");
-                }
-
-                try (var query = c.prepareStatement(joinGameString)){
-                    query.setString(1, username);
-                    query.setInt(2, gameID);
-
-                    query.executeUpdate();
-                }
-            }catch (DataAccessException e) {
-                throw new DataAccessException(e.getMessage());
-            } catch  (Exception e) {
-                throw new RuntimeException(e);
+        try (Connection c = DatabaseManager.getConnection()) {
+            GameData existingGame = queryGameByID(c, gameID);
+            if (Objects.equals(color, "WHITE") && existingGame.whiteUsername() != null) {
+                throw new DataAccessException("Error: already taken");
+            } else if (existingGame.blackUsername() != null) {
+                throw new DataAccessException("Error: already taken");
             }
-        } else {
-            throw new RuntimeException("Session creation failed");
+
+            try (var query = c.prepareStatement(joinGameString)){
+                query.setString(1, username);
+                query.setInt(2, gameID);
+
+                query.executeUpdate();
+            }
+        }catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        } catch  (Exception e) {
+            throw new RuntimeException(e);
         }
     };
 

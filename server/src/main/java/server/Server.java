@@ -30,6 +30,8 @@ public class Server {
             gameDAO = new SQLGameDAO();
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         // Services
