@@ -54,7 +54,7 @@ public class SQLAuthDAO implements IAuthDAO {
         return new AuthData(authToken, username);
     };
 
-    String queryAuthData(Connection c, String authToken) throws DataAccessException {
+    String queryAuthData(Connection c, String authToken) {
         String getUserString = """
                 SELECT username, authToken FROM auth WHERE authToken=?
                 """;
@@ -66,8 +66,8 @@ public class SQLAuthDAO implements IAuthDAO {
                     return result.getString("username");
                 }
             }
-        } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         return null;

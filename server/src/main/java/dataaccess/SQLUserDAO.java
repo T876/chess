@@ -28,12 +28,14 @@ public class SQLUserDAO implements IUserDAO {
 
                 query.executeUpdate();
             }
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             throw new DataAccessException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     };
 
-    String queryUsers(Connection c, String username) throws DataAccessException {
+    String queryUsers(Connection c, String username) {
         String getUserString = """
                 SELECT username, password FROM users WHERE username=?
                 """;
@@ -45,8 +47,8 @@ public class SQLUserDAO implements IUserDAO {
                     return result.getString("password");
                 }
             }
-        } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         return null;

@@ -8,6 +8,8 @@ import service.models.LoginResponse;
 import service.models.RegisterRequest;
 import service.models.RegisterResponse;
 
+import java.util.Objects;
+
 public class UserHandler {
     private final Gson serializer;
     private final UserService userService;
@@ -42,7 +44,14 @@ public class UserHandler {
         try{
             response = userService.register(request);
         } catch (DataAccessException e) {
-            this.returnErrorResponse(context, 403, e.getMessage());
+            if (Objects.equals(e.getMessage(), "Error: unauthorized")) {
+                this.returnErrorResponse(context, 403, e.getMessage());
+            } else if (Objects.equals(e.getMessage(), "Error: already taken")) {
+                this.returnErrorResponse(context, 403, e.getMessage());
+            }else {
+                this.returnErrorResponse(context,500, "Error:" + e.getMessage());
+            }
+
             return;
         } catch (Exception e) {
             this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
@@ -75,7 +84,12 @@ public class UserHandler {
         try{
             response = userService.login(request);
         } catch (DataAccessException e) {
-            this.returnErrorResponse(context, 401, e.getMessage());
+            if (e.getMessage() == "Error: unauthorized") {
+                this.returnErrorResponse(context, 401, e.getMessage());
+            } else {
+                this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
+            }
+
             return;
         } catch (Exception e) {
             this.returnErrorResponse(context, 500, "Error:" + e.getMessage());
