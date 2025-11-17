@@ -99,4 +99,12 @@ public class AuthDAOTests {
         Assertions.assertEquals(0, logoutResult);
     }
 
+    @Test
+    @Order(7)
+    @DisplayName("Clear Success")
+    public void clearSuccess() {
+        Assertions.assertDoesNotThrow(() -> {
+            authDAO.clear();
+        });
+    }
 }
