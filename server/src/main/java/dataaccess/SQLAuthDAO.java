@@ -36,7 +36,7 @@ public class SQLAuthDAO implements IAuthDAO {
     }
 
     private boolean stringIsSanitized(String data) {
-        return data.matches("[a-zA-Z]+");
+        return data.matches("[a-zA-Z0-9]+");
     }
 
     public AuthData verifyAuthToken(String authToken) throws DataAccessException {
