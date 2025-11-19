@@ -1,19 +1,27 @@
 import chess.*;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         // Services and Utils
+        boolean isRunning = true;
         Scanner inputScanner = new Scanner(System.in);
 
         System.out.println("♕ 240 Chess Client ♕");
 
-        System.out.println("Enter Your Name: ");
-        System.out.print(">>> ");
+        while (isRunning) {
+            System.out.print(">>> ");
 
-        String name = inputScanner.next();
+            String input = inputScanner.next();
 
-        System.out.println("Welcome " + name);
+            if (Objects.equals(input, "quit")) {
+                isRunning = false;
+                continue;
+            }
+
+            System.out.println(input);
+        }
     }
 }
