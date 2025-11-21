@@ -1,4 +1,5 @@
 import chess.ChessGame;
+import model.GameData;
 import service.GameService;
 import service.UserService;
 
@@ -36,6 +37,21 @@ public class Router {
                         System.out.println("Game created successfully");
                     } else {
                         System.out.println("Game creation failed. Please try again.");
+                    }
+                    break;
+                case "list":
+                    List<GameData> games = gameService.listGames(userService.authData.authToken());
+                    int counter = 1;
+                    for (GameData game : games) {
+                        System.out.print(counter + ". ");
+                        System.out.println(game.gameName());
+                        System.out.println("White: " + game.whiteUsername());
+                        System.out.println("Black: " + game.blackUsername());
+                        System.out.println("Id: " + game.gameID());
+                        counter++;
+                    }
+                    if (counter == 1) {
+                        System.out.println("No games to list");
                     }
                     break;
                 default:
