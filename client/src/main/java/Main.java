@@ -37,7 +37,11 @@ public class Main {
                 continue;
             }
 
-            router.routeUserInput(input.split(" "));
+            try {
+                router.routeUserInput(input.split(" "));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
