@@ -44,7 +44,12 @@ public class Main {
                     router.routeUserInput(input.split(" "));
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                if (e.getMessage().contains("For input string")) {
+                    System.out.println("Game ID must be a number");
+                } else {
+                    System.out.println(e.getMessage());
+                }
+
                 System.out.println("Type 'help' for more info");
             }
         }

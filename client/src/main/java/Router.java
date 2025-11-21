@@ -11,7 +11,6 @@ public class Router {
     private GameService gameService;
 
     public boolean showHelp;
-    public boolean quit;
 
     public Router(UserService userService, GameService gameService) {
         this.userService = userService;
@@ -71,6 +70,10 @@ public class Router {
                     this.gameService.printGame();
 
                     break;
+                case "observe":
+                    if (inputArgs.length != 2) {
+                        throw new InputException("Please enter only the game id you want to observe");
+                    }
                 default:
                     System.out.println("Invalid input, please type help to see the list of valid inputs");
 
@@ -99,6 +102,10 @@ public class Router {
 
             }
         }
+
+    }
+
+    public void routeGameInput(String[] inputArgs) throws InputException {
 
     }
 
