@@ -24,11 +24,15 @@ public class GameService {
         return new ArrayList<>();
     }
 
-    public GameData joinGame(int gameID, String teamColor, String authToken) {
+    public void joinGame(int gameID, String teamColor, String authToken) {
         ChessGame game = new ChessGame();
         this.selectedGame = game;
         this.color = teamColor == "WHITE" ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
-        return new GameData(1, null, null, "game1", game);
+    }
+
+    public void observeGame(int gameID, String authToken) {
+        ChessGame game = new ChessGame();
+        this.selectedGame = game;
     }
 
     public void printGame() {

@@ -74,6 +74,11 @@ public class Router {
                     if (inputArgs.length != 2) {
                         throw new InputException("Please enter only the game id you want to observe");
                     }
+
+                    this.gameService.observeGame(Integer.parseInt(inputArgs[1]), this.userService.authData.authToken());
+
+                    this.gameService.printGame();
+                    break;
                 default:
                     System.out.println("Invalid input, please type help to see the list of valid inputs");
 
@@ -104,11 +109,6 @@ public class Router {
         }
 
     }
-
-    public void routeGameInput(String[] inputArgs) throws InputException {
-
-    }
-
 }
 
 
