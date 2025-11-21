@@ -19,7 +19,7 @@ public class UserService {
     }
 
     public void login(String username, String password) {
-        this.authData = new AuthData(username, UUID.randomUUID().toString());
+        this.authData = new AuthData(UUID.randomUUID().toString(), username);
     }
 
     public void logout() {

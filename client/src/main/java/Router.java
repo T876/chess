@@ -43,6 +43,13 @@ public class Router {
 
                     this.userService.register(inputArgs[1], inputArgs[2], inputArgs[3]);
                     break;
+                case "login":
+                    if (inputArgs.length != 3) {
+                        throw new InputException("Error: Please enter username and password to log in");
+                    }
+
+                    this.userService.login(inputArgs[1], inputArgs[2]);
+                    break;
                 default:
                     System.out.println("Invalid input, please type help to see the list of valid inputs");
 

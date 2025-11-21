@@ -41,6 +41,7 @@ public class Main {
                 router.routeUserInput(input.split(" "));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                System.out.println("Type 'help' for more info");
             }
         }
     }
