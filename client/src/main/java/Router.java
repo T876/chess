@@ -4,6 +4,7 @@ import service.GameService;
 import service.UserService;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Router {
     private UserService userService;
@@ -53,6 +54,22 @@ public class Router {
                     if (counter == 1) {
                         System.out.println("No games to list");
                     }
+                    break;
+                case "join":
+                    if (inputArgs.length != 3){
+                        throw new InputException("Join failed. Please list the game id and color you would like to play " +
+                                "\n Example: join 1 WHITE");
+                    }
+
+                    if (!Objects.equals(inputArgs[2], "WHITE") && !Objects.equals(inputArgs[2], "BLACK")) {
+                        throw new InputException("Color must be BLACK or WHITE");
+                    }
+
+                    this.gameService.joinGame(Integer.parseInt(inputArgs[1]), inputArgs[2],
+                            this.userService.authData.authToken());
+
+                    this.gameService.printGame();
+
                     break;
                 default:
                     System.out.println("Invalid input, please type help to see the list of valid inputs");

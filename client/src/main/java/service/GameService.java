@@ -10,6 +10,7 @@ import java.util.List;
 public class GameService {
     private ServerFacade server;
     public ChessGame selectedGame;
+    public ChessGame.TeamColor color;
 
     public GameService(ServerFacade server) {
         this.server = server;
@@ -23,7 +24,14 @@ public class GameService {
         return new ArrayList<>();
     }
 
-    public GameData joinGame(boolean observeOnly, String authToken) {
-        return new GameData(1, null, null, "game1", new ChessGame());
+    public GameData joinGame(int gameID, String teamColor, String authToken) {
+        ChessGame game = new ChessGame();
+        this.selectedGame = game;
+        this.color = teamColor == "WHITE" ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+        return new GameData(1, null, null, "game1", game);
+    }
+
+    public void printGame() {
+        System.out.println("Printing Game");
     }
 }

@@ -17,7 +17,7 @@ public class Main {
         GameService gameService = new GameService(facade);
         Router router = new Router(userService, gameService);
 
-        System.out.println("♕ 240 Chess Client ♕");
+        System.out.println("♕ Welcome to Chess ♕");
 
         while (isRunning) {
             if (router.showHelp) {
@@ -38,7 +38,11 @@ public class Main {
             }
 
             try {
-                router.routeUserInput(input.split(" "));
+                if (gameService.selectedGame != null) {
+                    gameService.printGame();
+                } else {
+                    router.routeUserInput(input.split(" "));
+                }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.out.println("Type 'help' for more info");
