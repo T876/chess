@@ -15,14 +15,15 @@ public class UserService {
     }
 
     public void register(String username, String password, String email) {
-        this.authData = new AuthData(UUID.randomUUID().toString(), username);
+        this.authData = server.register(username, password, email);
     }
 
     public void login(String username, String password) {
-        this.authData = new AuthData(UUID.randomUUID().toString(), username);
+        this.authData = server.login(username, password);
     }
 
     public void logout() {
+        this.server.logout(this.authData.authToken());
         this.authData = null;
     }
 }

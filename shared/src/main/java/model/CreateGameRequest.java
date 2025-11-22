@@ -1,3 +1,3 @@
-package service.models;
+package model;
 
 public record CreateGameRequest(String gameName) { }

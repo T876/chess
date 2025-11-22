@@ -3,9 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
-import model.AuthData;
-import model.GameData;
-import service.models.*;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.List;

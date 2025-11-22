@@ -1,5 +1,3 @@
-package service.models;
-
-import chess.ChessGame;
+package model;
 
 public record JoinGameRequest(String playerColor, int gameID) { }

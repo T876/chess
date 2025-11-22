@@ -17,14 +17,16 @@ public class GameService {
     }
 
     public boolean createGame(String name, String authToken) {
+        this.server.createGame(authToken, name);
         return true;
     }
 
     public List<GameData> listGames(String authToken) {
-        return new ArrayList<>();
+        return this.server.listGames(authToken);
     }
 
     public void joinGame(int gameID, String teamColor, String authToken) {
+        this.server.joinGame(authToken, gameID);
         ChessGame game = new ChessGame();
         this.selectedGame = game;
         this.color = teamColor == "WHITE" ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;

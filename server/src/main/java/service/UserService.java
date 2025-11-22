@@ -3,12 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IUserDAO;
-import model.AuthData;
-import model.UserData;
-import service.models.LoginRequest;
-import service.models.LoginResponse;
-import service.models.RegisterRequest;
-import service.models.RegisterResponse;
+import model.*;
 
 public class UserService {
     IUserDAO userDAO;

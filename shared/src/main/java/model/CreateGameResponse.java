@@ -1,4 +1,4 @@
-package service.models;
+package model;
 
 public record CreateGameResponse(int gameID) {
 }
