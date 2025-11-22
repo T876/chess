@@ -2,11 +2,11 @@ package server.handlers;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import io.javalin.http.Context;
+import model.CreateGameRequest;
+import model.CreateGameResponse;
+import model.GameListResponse;
+import model.JoinGameRequest;
 import service.GameService;
-import service.models.CreateGameRequest;
-import service.models.CreateGameResponse;
-import service.models.GameListResponse;
-import service.models.JoinGameRequest;
 
 import java.util.Objects;
 

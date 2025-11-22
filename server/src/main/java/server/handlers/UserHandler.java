@@ -2,11 +2,11 @@ package server.handlers;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import io.javalin.http.Context;
+import model.LoginRequest;
+import model.LoginResponse;
+import model.RegisterRequest;
+import model.RegisterResponse;
 import service.UserService;
-import service.models.LoginRequest;
-import service.models.LoginResponse;
-import service.models.RegisterRequest;
-import service.models.RegisterResponse;
 
 import java.util.Objects;
 

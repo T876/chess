@@ -2,7 +2,6 @@ package dataaccess.interfaces;
 
 import dataaccess.DataAccessException;
 import model.GameData;
-import service.models.GameListResponse;
 
 import java.util.List;
 
