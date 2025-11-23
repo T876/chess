@@ -3,11 +3,11 @@ package service;
 import dataaccess.*;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IUserDAO;
+import model.LoginRequest;
+import model.LoginResponse;
+import model.RegisterRequest;
+import model.RegisterResponse;
 import org.junit.jupiter.api.*;
-import service.models.LoginRequest;
-import service.models.LoginResponse;
-import service.models.RegisterRequest;
-import service.models.RegisterResponse;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

@@ -4,8 +4,8 @@ import dataaccess.*;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
 import dataaccess.interfaces.IUserDAO;
+import model.*;
 import org.junit.jupiter.api.*;
-import service.models.*;
 
 import java.util.ArrayList;
 

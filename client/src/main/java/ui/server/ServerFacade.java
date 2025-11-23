@@ -83,6 +83,27 @@ public class ServerFacade {
 
     public void joinGame(String authToken, int gameID) {}
 
+    public void clear () {
+        String urlString = this.getURLString("/db");
+
+        HttpRequest request;
+        HttpResponse<String> httpResponse;
+
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(urlString))
+                    .timeout(java.time.Duration.ofMillis(6000))
+                    .DELETE()
+                    .build();
+
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.ensureHTTPResponse(httpResponse);
+    }
+
     private String getURLString(String path) {
         return String.format(Locale.getDefault(), "http://localhost:8080%s",path);
     }
