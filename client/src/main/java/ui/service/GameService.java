@@ -2,6 +2,7 @@ package ui.service;
 
 import chess.ChessGame;
 import model.GameData;
+import model.GameInfo;
 import ui.server.ServerFacade;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class GameService {
         return true;
     }
 
-    public List<GameData> listGames(String authToken) {
+    public List<GameInfo> listGames(String authToken) {
         return this.server.listGames(authToken);
     }
 

@@ -92,8 +92,29 @@ public class ServerFacade {
         this.ensureHTTPResponse(httpResponse);
     }
 
-    public List<GameData> listGames(String authToken) {
-        return new ArrayList<>();
+    public List<GameInfo> listGames(String authToken) {
+        String urlString = this.getURLString("/game");
+
+        HttpRequest request;
+        HttpResponse<String> httpResponse;
+
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(urlString))
+                    .timeout(java.time.Duration.ofMillis(6000))
+                    .GET()
+                    .header("authorization", authToken)
+                    .build();
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.ensureHTTPResponse(httpResponse);
+
+        GameListResponse goodResponse = serializer.fromJson(httpResponse.body(), GameListResponse.class);
+
+        return goodResponse.games();
     }
 
     public int createGame(String authToken, String name) {

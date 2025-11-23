@@ -85,6 +85,25 @@ public class ServerFacadeTests {
         });
     }
 
+    @Test
+    @Order(7)
+    @DisplayName("List Success")
+    public void listSuccess() {
+        AuthData response = facade.register("username", "password", "email");
+        Assertions.assertDoesNotThrow(() -> {
+            facade.listGames(response.authToken());
+        });
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("List Unauthorized")
+    public void listUnauthorized() {
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            facade.listGames("fakeToken");
+        });
+    }
+
     @AfterAll
     static void stopServer() {
         server.stop();

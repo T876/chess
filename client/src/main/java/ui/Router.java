@@ -1,6 +1,7 @@
 package ui;
 
 import model.GameData;
+import model.GameInfo;
 import ui.service.GameService;
 import ui.service.UserService;
 
@@ -41,9 +42,9 @@ public class Router {
                     }
                     break;
                 case "list":
-                    List<GameData> games = gameService.listGames(userService.authData.authToken());
+                    List<GameInfo> games = gameService.listGames(userService.authData.authToken());
                     int counter = 1;
-                    for (GameData game : games) {
+                    for (GameInfo game : games) {
                         System.out.print(counter + ". ");
                         System.out.println(game.gameName());
                         System.out.println("White: " + game.whiteUsername());
