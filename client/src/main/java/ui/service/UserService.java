@@ -1,10 +1,7 @@
-package service;
+package ui.service;
 
 import model.AuthData;
-import server.ServerFacade;
-
-import java.util.Optional;
-import java.util.UUID;
+import ui.server.ServerFacade;
 
 public class UserService {
     private ServerFacade server;

@@ -1,7 +1,8 @@
-import chess.ChessGame;
+package ui;
+
 import model.GameData;
-import service.GameService;
-import service.UserService;
+import ui.service.GameService;
+import ui.service.UserService;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +18,7 @@ public class Router {
         this.gameService = gameService;
     }
 
-    public void routeUserInput(String[] inputArgs) throws InputException{
+    public void routeUserInput(String[] inputArgs) {
         this.showHelp = false;
 
         if (this.userService.authData != null){
@@ -30,7 +31,7 @@ public class Router {
                     break;
                 case "create":
                     if (inputArgs.length != 2) {
-                        throw new InputException("Error: Please enter only the game name to create a game");
+                        throw new RuntimeException("Error: Please enter only the game name to create a game");
                     }
 
                     if (this.gameService.createGame(inputArgs[1], userService.authData.authToken())) {
@@ -56,12 +57,12 @@ public class Router {
                     break;
                 case "join":
                     if (inputArgs.length != 3){
-                        throw new InputException("Join failed. Please list the game id and color you would like to play " +
+                        throw new RuntimeException("Join failed. Please list the game id and color you would like to play " +
                                 "\n Example: join 1 WHITE");
                     }
 
                     if (!Objects.equals(inputArgs[2], "WHITE") && !Objects.equals(inputArgs[2], "BLACK")) {
-                        throw new InputException("Color must be BLACK or WHITE");
+                        throw new RuntimeException("Color must be BLACK or WHITE");
                     }
 
                     this.gameService.joinGame(Integer.parseInt(inputArgs[1]), inputArgs[2],
@@ -72,7 +73,7 @@ public class Router {
                     break;
                 case "observe":
                     if (inputArgs.length != 2) {
-                        throw new InputException("Please enter only the game id you want to observe");
+                        throw new RuntimeException("Please enter only the game id you want to observe");
                     }
 
                     this.gameService.observeGame(Integer.parseInt(inputArgs[1]), this.userService.authData.authToken());
@@ -90,14 +91,14 @@ public class Router {
                     break;
                 case "register":
                     if (inputArgs.length != 4) {
-                        throw new InputException("Error: Please enter username, password and email to register");
+                        throw new RuntimeException("Error: Please enter username, password and email to register");
                     }
 
                     this.userService.register(inputArgs[1], inputArgs[2], inputArgs[3]);
                     break;
                 case "login":
                     if (inputArgs.length != 3) {
-                        throw new InputException("Error: Please enter username and password to log in");
+                        throw new RuntimeException("Error: Please enter username and password to log in");
                     }
 
                     this.userService.login(inputArgs[1], inputArgs[2]);

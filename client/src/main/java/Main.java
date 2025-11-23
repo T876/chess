@@ -1,8 +1,8 @@
-import chess.*;
 import com.google.gson.Gson;
-import server.ServerFacade;
-import service.GameService;
-import service.UserService;
+import ui.server.ServerFacade;
+import ui.service.GameService;
+import ui.service.UserService;
+import ui.Router;
 
 import java.util.Objects;
 import java.util.Scanner;

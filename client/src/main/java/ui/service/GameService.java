@@ -1,10 +1,9 @@
-package service;
+package ui.service;
 
 import chess.ChessGame;
 import model.GameData;
-import server.ServerFacade;
+import ui.server.ServerFacade;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameService {
