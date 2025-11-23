@@ -47,7 +47,28 @@ public class ServerFacade {
     }
 
     public AuthData login(String username, String password) {
-        return new AuthData(UUID.randomUUID().toString(), username);
+        String urlString = this.getURLString("/session");
+        String loginRequestJson = serializer.toJson(new LoginRequest(username, password));
+
+        HttpRequest request;
+        HttpResponse<String> httpResponse;
+
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(urlString))
+                    .timeout(java.time.Duration.ofMillis(6000))
+                    .POST(HttpRequest.BodyPublishers.ofString(loginRequestJson))
+                    .build();
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.ensureHTTPResponse(httpResponse);
+
+        LoginResponse goodResponse = serializer.fromJson(httpResponse.body(), LoginResponse.class);
+
+        return new AuthData(goodResponse.authToken(), goodResponse.username());
     }
 
     public void logout(String authToken) { }
