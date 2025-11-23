@@ -123,11 +123,30 @@ public class ServerFacadeTests {
         });
     }
 
+    @Test
+    @Order(11)
+    @DisplayName("Join Success")
+    public void joinSuccess() {
+        AuthData response = facade.register("username", "password", "email");
+        int id = facade.createGame(response.authToken(), "game1");
+        Assertions.assertDoesNotThrow(() -> {
+            facade.joinGame(response.authToken(), id, "WHITE");
+        });
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Join Unauthorized")
+    public void joinUnauthorized() {
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            facade.joinGame("fakeToken", 1, "WHITE");
+        });
+    }
+
     @AfterAll
     static void stopServer() {
         server.stop();
     }
-
 
     @Test
     public void sampleTest() {

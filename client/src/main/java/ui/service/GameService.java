@@ -25,7 +25,7 @@ public class GameService {
     }
 
     public void joinGame(int gameID, String teamColor, String authToken) {
-        this.server.joinGame(authToken, gameID);
+        this.server.joinGame(authToken, gameID, teamColor);
         ChessGame game = new ChessGame();
         this.selectedGame = game;
         this.color = teamColor == "WHITE" ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
