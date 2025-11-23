@@ -71,7 +71,26 @@ public class ServerFacade {
         return new AuthData(goodResponse.authToken(), goodResponse.username());
     }
 
-    public void logout(String authToken) { }
+    public void logout(String authToken) {
+        String urlString = this.getURLString("/session");
+
+        HttpRequest request;
+        HttpResponse<String> httpResponse;
+
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(urlString))
+                    .timeout(java.time.Duration.ofMillis(6000))
+                    .DELETE()
+                    .header("authorization", authToken)
+                    .build();
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.ensureHTTPResponse(httpResponse);
+    }
 
     public List<GameData> listGames(String authToken) {
         return new ArrayList<>();

@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import model.AuthData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.server.ServerFacade;
@@ -62,6 +63,25 @@ public class ServerFacadeTests {
     public void loginUnauthorized() {
         Assertions.assertThrows(RuntimeException.class, () -> {
             facade.login("username", "password");
+        });
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Logout Success")
+    public void logoutSuccess() {
+        AuthData response = facade.register("username", "password", "email");
+        Assertions.assertDoesNotThrow(() -> {
+            facade.logout(response.authToken());
+        });
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Logout Unauthorized")
+    public void logoutUnauthorized() {
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            facade.logout("fakeToken");
         });
     }
 
