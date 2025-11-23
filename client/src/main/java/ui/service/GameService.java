@@ -57,20 +57,28 @@ public class GameService {
         System.out.println();
     }
 
+    private void printRowDigit(int i, boolean newLine) {
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(" " + i + " ");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+        if (newLine) {
+            System.out.println();
+        }
+    }
+
     private void printBlack() {
         System.out.println(EscapeSequences.ERASE_SCREEN);
         String rowString = "    h  g  f  e  d  c  b  a    ";
 
         this.printCharRow(rowString);
         for (int i = 1; i <= 8 ; i++) {
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
             int flipper = i % 2;
 
+            printRowDigit(i, false);
 
-            System.out.print(" " + i + " ");
-
-            for (int j = 8; j >= 1; j--) {
+            for (int j = 1; j <= 8; j++) {
 
                 if (flipper == 1) {
                     System.out.print(EscapeSequences.SET_BG_COLOR_BLUE);
@@ -81,8 +89,6 @@ public class GameService {
                 ChessPiece piece = this.selectedGame.getBoard().getPiece(
                         new ChessPosition(i, j)
                 );
-
-
 
                 if (piece == null) {
                     System.out.print("   ");
@@ -102,12 +108,7 @@ public class GameService {
                 }
             }
 
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" " + i + " ");
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
-            System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
-            System.out.println();
+            printRowDigit(i, true);
         }
 
         this.printCharRow(rowString);
@@ -122,9 +123,7 @@ public class GameService {
         for (int i = 8; i >= 1 ; i--) {
             int flipper = i % 2;
 
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" " + i + " ");
+            printRowDigit(i, false);
 
             for (int j = 1; j <= 8; j++) {
 
@@ -137,8 +136,6 @@ public class GameService {
                 ChessPiece piece = this.selectedGame.getBoard().getPiece(
                         new ChessPosition(i, j)
                 );
-
-
 
                 if (piece == null) {
                     System.out.print("   ");
@@ -158,12 +155,7 @@ public class GameService {
                 }
             }
 
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" " + i + " ");
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
-            System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
-            System.out.println();
+            printRowDigit(i, true);
         }
         printCharRow(rowString);
     }
