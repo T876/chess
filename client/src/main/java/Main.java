@@ -46,7 +46,9 @@ public class Main {
             } catch (Exception e) {
                 if (e.getMessage().contains("For input string")) {
                     System.out.println("Game ID must be a number");
-                } else {
+                } if (e.getMessage().contains("Game not found")){
+                    System.out.println("Game not found");
+                }else {
                     System.out.println(e.getMessage());
                 }
 

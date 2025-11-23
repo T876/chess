@@ -91,4 +91,16 @@ public class ChessPiece {
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
+
+    @Override
+    public String toString() {
+        return switch (this.type) {
+            case PieceType.BISHOP -> " B " ;
+            case PieceType.ROOK -> " R ";
+            case PieceType.KNIGHT -> " N ";
+            case PieceType.QUEEN -> " Q ";
+            case PieceType.KING -> " K ";
+            case PieceType.PAWN -> " P ";
+        };
+    }
 }
