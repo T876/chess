@@ -59,12 +59,12 @@ public class GameHandler {
             auth = context.header("authorization");
             request = serializer.fromJson(context.body(), CreateGameRequest.class);
         } catch(Exception e) {
-            returnErrorResponse(context, 400, "Error: bad request");
+            returnErrorResponse(context, 400, "Error: malformed request");
             return;
         }
 
         if (request.gameName() == null) {
-            returnErrorResponse(context, 400, "Error: bad request");
+            returnErrorResponse(context, 400, "Error: no game name provided");
             return;
         }
 
@@ -101,8 +101,6 @@ public class GameHandler {
             returnErrorResponse(context, 400, "Error: bad request");
             return;
         }
-
-
 
         try{
             this.gameService.joinGame(auth, request);

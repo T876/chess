@@ -118,7 +118,29 @@ public class ServerFacade {
     }
 
     public int createGame(String authToken, String name) {
-        return 1;
+        String urlString = this.getURLString("/game");
+        String createRequestJson = serializer.toJson(new CreateGameRequest(name));
+
+        HttpRequest request;
+        HttpResponse<String> httpResponse;
+
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(urlString))
+                    .timeout(java.time.Duration.ofMillis(6000))
+                    .POST(HttpRequest.BodyPublishers.ofString(createRequestJson))
+                    .header("authorization", authToken)
+                    .build();
+            httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.ensureHTTPResponse(httpResponse);
+
+        CreateGameResponse goodResponse = serializer.fromJson(httpResponse.body(), CreateGameResponse.class);
+
+        return goodResponse.gameID();
     }
 
     public void joinGame(String authToken, int gameID) {}

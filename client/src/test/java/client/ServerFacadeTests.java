@@ -104,6 +104,25 @@ public class ServerFacadeTests {
         });
     }
 
+    @Test
+    @Order(9)
+    @DisplayName("Create Success")
+    public void createSuccess() {
+        AuthData response = facade.register("username", "password", "email");
+        Assertions.assertDoesNotThrow(() -> {
+            facade.createGame(response.authToken(), "game1");
+        });
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("Create Unauthorized")
+    public void createUnauthorized() {
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            facade.createGame("fakeToken", "game1");
+        });
+    }
+
     @AfterAll
     static void stopServer() {
         server.stop();

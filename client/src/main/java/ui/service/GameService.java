@@ -16,9 +16,8 @@ public class GameService {
         this.server = server;
     }
 
-    public boolean createGame(String name, String authToken) {
-        this.server.createGame(authToken, name);
-        return true;
+    public int createGame(String name, String authToken) {
+        return this.server.createGame(authToken, name);
     }
 
     public List<GameInfo> listGames(String authToken) {

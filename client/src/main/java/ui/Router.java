@@ -35,11 +35,8 @@ public class Router {
                         throw new RuntimeException("Error: Please enter only the game name to create a game");
                     }
 
-                    if (this.gameService.createGame(inputArgs[1], userService.authData.authToken())) {
-                        System.out.println("Game created successfully");
-                    } else {
-                        System.out.println("Game creation failed. Please try again.");
-                    }
+                    int gameID = this.gameService.createGame(inputArgs[1], userService.authData.authToken());
+                    System.out.println("Game created successfully. ID: " + gameID);
                     break;
                 case "list":
                     List<GameInfo> games = gameService.listGames(userService.authData.authToken());
