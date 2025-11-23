@@ -68,47 +68,51 @@ public class GameService {
         }
     }
 
+    private void printRow(int rowNum) {
+        int flipper = rowNum % 2;
+
+        printRowDigit(rowNum, false);
+
+        for (int j = 1; j <= 8; j++) {
+
+            if (flipper == 1) {
+                System.out.print(EscapeSequences.SET_BG_COLOR_BLUE);
+            } else{
+                System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+            }
+
+            ChessPiece piece = this.selectedGame.getBoard().getPiece(
+                    new ChessPosition(rowNum, j)
+            );
+
+            if (piece == null) {
+                System.out.print("   ");
+            } else {
+                if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+                } else {
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+                }
+                System.out.print(piece);
+            }
+
+            if (flipper == 1) {
+                flipper = 0;
+            } else {
+                flipper = 1;
+            }
+        }
+
+        printRowDigit(rowNum, true);
+    }
+
     private void printBlack() {
         System.out.println(EscapeSequences.ERASE_SCREEN);
         String rowString = "    h  g  f  e  d  c  b  a    ";
 
         this.printCharRow(rowString);
         for (int i = 1; i <= 8 ; i++) {
-            int flipper = i % 2;
-
-            printRowDigit(i, false);
-
-            for (int j = 1; j <= 8; j++) {
-
-                if (flipper == 1) {
-                    System.out.print(EscapeSequences.SET_BG_COLOR_BLUE);
-                } else{
-                    System.out.print(EscapeSequences.SET_BG_COLOR_RED);
-                }
-
-                ChessPiece piece = this.selectedGame.getBoard().getPiece(
-                        new ChessPosition(i, j)
-                );
-
-                if (piece == null) {
-                    System.out.print("   ");
-                } else {
-                    if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                        System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
-                    } else {
-                        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-                    }
-                    System.out.print(piece);
-                }
-
-                if (flipper == 1) {
-                    flipper = 0;
-                } else {
-                    flipper = 1;
-                }
-            }
-
-            printRowDigit(i, true);
+            printRow(i);
         }
 
         this.printCharRow(rowString);
@@ -121,41 +125,7 @@ public class GameService {
 
         printCharRow(rowString);
         for (int i = 8; i >= 1 ; i--) {
-            int flipper = i % 2;
-
-            printRowDigit(i, false);
-
-            for (int j = 1; j <= 8; j++) {
-
-                if (flipper == 1) {
-                    System.out.print(EscapeSequences.SET_BG_COLOR_BLUE);
-                } else{
-                    System.out.print(EscapeSequences.SET_BG_COLOR_RED);
-                }
-
-                ChessPiece piece = this.selectedGame.getBoard().getPiece(
-                        new ChessPosition(i, j)
-                );
-
-                if (piece == null) {
-                    System.out.print("   ");
-                } else {
-                    if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                        System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
-                    } else {
-                        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-                    }
-                    System.out.print(piece);
-                }
-
-                if (flipper == 1) {
-                    flipper = 0;
-                } else {
-                    flipper = 1;
-                }
-            }
-
-            printRowDigit(i, true);
+            printRow(i);
         }
         printCharRow(rowString);
     }
