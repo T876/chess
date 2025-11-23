@@ -12,7 +12,7 @@ public class Main {
         // Services and Utils
         boolean isRunning = true;
         Scanner inputScanner = new Scanner(System.in);
-        ServerFacade facade = new ServerFacade(new Gson());
+        ServerFacade facade = new ServerFacade(8080);
         UserService userService = new UserService(facade);
         GameService gameService = new GameService(facade);
         Router router = new Router(userService, gameService);

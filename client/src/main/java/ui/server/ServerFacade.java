@@ -7,18 +7,18 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 public class ServerFacade {
     private final Gson serializer;
     private final HttpClient httpClient;
+    private int port;
 
-    public ServerFacade(Gson gson) {
-        this.serializer = gson;
+    public ServerFacade(int port) {
+        this.serializer = new Gson();
         this.httpClient = HttpClient.newHttpClient();
+        this.port = port;
     }
 
     public AuthData register(String username, String password, String email) {
@@ -187,7 +187,7 @@ public class ServerFacade {
     }
 
     private String getURLString(String path) {
-        return String.format(Locale.getDefault(), "http://localhost:8080%s",path);
+        return String.format(Locale.getDefault(), "http://localhost:%d%s", this.port, path);
     }
 
     private void ensureHTTPResponse(HttpResponse<String> response) {
