@@ -60,15 +60,16 @@ public class Main {
     private static void printHelp(boolean isLoggedIn) {
         if (isLoggedIn) {
             System.out.println("create <NAME>");
-            System.out.println("list");
-            System.out.println("join <ID> <WHITE/BLACK>");
-            System.out.println("logout");
-            System.out.println("quit");
+            System.out.println("list - list all games");
+            System.out.println("join <ID> <WHITE/BLACK> - join a game");
+            System.out.println("observe <ID> - start observing a game");
+            System.out.println("logout - log out of the app");
+            System.out.println("quit - close app");
             System.out.println("help");
         } else {
             System.out.println("register <USERNAME> <PASSWORD> <EMAIL>");
             System.out.println("login <USERNAME> <PASSWORD>");
-            System.out.println("quit");
+            System.out.println("quit - close app");
             System.out.println("help");
         }
     }
