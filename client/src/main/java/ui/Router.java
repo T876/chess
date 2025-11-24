@@ -63,7 +63,9 @@ public class Router {
                         throw new RuntimeException("Color must be BLACK or WHITE");
                     }
 
-                    this.gameService.joinGame(Integer.parseInt(inputArgs[1]), inputArgs[2],
+                    int gameIDNum = convertIDToInt(inputArgs[1]);
+
+                    this.gameService.joinGame(gameIDNum, inputArgs[2],
                             this.userService.authData.authToken());
 
                     this.gameService.printGame();
@@ -74,7 +76,9 @@ public class Router {
                         throw new RuntimeException("Please enter only the game id you want to observe");
                     }
 
-                    this.gameService.observeGame(Integer.parseInt(inputArgs[1]), this.userService.authData.authToken());
+                    int observeIDNum = convertIDToInt(inputArgs[1]);
+
+                    this.gameService.observeGame(observeIDNum, this.userService.authData.authToken());
 
                     this.gameService.printGame();
                     break;
@@ -107,6 +111,14 @@ public class Router {
             }
         }
 
+    }
+
+    private int convertIDToInt(String userInput) {
+        try {
+            return Integer.parseInt(userInput);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Game ID must be a number");
+        }
     }
 }
 

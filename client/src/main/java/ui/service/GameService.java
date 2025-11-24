@@ -68,8 +68,16 @@ public class GameService {
         }
     }
 
-    private void printRow(int rowNum) {
+    private void printRow(int rowNum, ChessGame.TeamColor color) {
         int flipper = rowNum % 2;
+
+        if (color == ChessGame.TeamColor.BLACK) {
+            if (flipper == 1) {
+                flipper = 0;
+            } else {
+                flipper = 1;
+            }
+        }
 
         printRowDigit(rowNum, false);
 
@@ -81,9 +89,17 @@ public class GameService {
                 System.out.print(EscapeSequences.SET_BG_COLOR_RED);
             }
 
-            ChessPiece piece = this.selectedGame.getBoard().getPiece(
-                    new ChessPosition(rowNum, j)
-            );
+            ChessPiece piece;
+
+            if (color == ChessGame.TeamColor.WHITE) {
+                piece = this.selectedGame.getBoard().getPiece(
+                        new ChessPosition(rowNum, j)
+                );
+            } else {
+                piece = this.selectedGame.getBoard().getPiece(
+                        new ChessPosition(rowNum, 9-j)
+                );
+            }
 
             if (piece == null) {
                 System.out.print("   ");
@@ -112,7 +128,7 @@ public class GameService {
 
         this.printCharRow(rowString);
         for (int i = 1; i <= 8 ; i++) {
-            printRow(i);
+            printRow(i, ChessGame.TeamColor.BLACK);
         }
 
         this.printCharRow(rowString);
@@ -125,7 +141,7 @@ public class GameService {
 
         printCharRow(rowString);
         for (int i = 8; i >= 1 ; i--) {
-            printRow(i);
+            printRow(i, ChessGame.TeamColor.WHITE);
         }
         printCharRow(rowString);
     }
