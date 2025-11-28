@@ -15,29 +15,49 @@ public class GameService {
     private ServerFacade server;
     public ChessGame selectedGame;
     public ChessGame.TeamColor color;
+    private List<GameInfo> gamesList;
 
     public GameService(ServerFacade server) {
         this.server = server;
     }
 
     public int createGame(String name, String authToken) {
-        return this.server.createGame(authToken, name);
+        int gameID = this.server.createGame(authToken, name);
+        List<GameInfo> games = this.server.listGames(authToken);
+        int counter = 1;
+
+        for (GameInfo game : games) {
+            if (game.gameID() == gameID) {
+                return counter;
+            }
+
+            counter++;
+        }
+        throw new RuntimeException("Game creation failed. Please try again");
     }
 
     public List<GameInfo> listGames(String authToken) {
         return this.server.listGames(authToken);
     }
 
-    public void joinGame(int gameID, String teamColor, String authToken) {
-        this.server.joinGame(authToken, gameID, teamColor);
+    public void joinGame(int gameIndex, String teamColor, String authToken) {
+        this.gamesList = this.server.listGames(authToken);
+        GameInfo gameToJoin = this.gamesList.get(gameIndex - 1);
+
+        this.server.joinGame(authToken, gameToJoin.gameID(), teamColor);
         ChessGame game = new ChessGame();
         this.selectedGame = game;
         this.color = Objects.equals(teamColor, "WHITE") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
     }
 
-    public void observeGame(int gameID, String authToken) {
-        ChessGame game = new ChessGame();
-        this.selectedGame = game;
+    public void observeGame(int gameIndex, String authToken) {
+        this.gamesList = this.server.listGames(authToken);
+        try {
+            gamesList.get(gameIndex);
+        } catch (Exception e) {
+            throw new RuntimeException("Game does not exist");
+        }
+        this.selectedGame = new ChessGame();
     }
 
     public void printGame() {

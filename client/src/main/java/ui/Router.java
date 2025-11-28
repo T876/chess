@@ -36,7 +36,7 @@ public class Router {
                     }
 
                     int gameID = this.gameService.createGame(inputArgs[1], userService.authData.authToken());
-                    System.out.println("Game created successfully. ID: " + gameID);
+                    System.out.println("Game created successfully. Index: " + gameID);
                     break;
                 case "list":
                     List<GameInfo> games = gameService.listGames(userService.authData.authToken());
@@ -46,7 +46,6 @@ public class Router {
                         System.out.println(game.gameName());
                         System.out.println("White: " + game.whiteUsername());
                         System.out.println("Black: " + game.blackUsername());
-                        System.out.println("Id: " + game.gameID());
                         counter++;
                     }
                     if (counter == 1) {
