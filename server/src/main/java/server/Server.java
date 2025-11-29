@@ -11,6 +11,8 @@ import server.handlers.UserHandler;
 import service.DestructionService;
 import service.GameService;
 import service.UserService;
+import websocket.GameConnectionStorage;
+import websocket.WebsocketHandler;
 
 public class Server {
 
@@ -22,6 +24,8 @@ public class Server {
         IAuthDAO authDAO;
         IUserDAO userDAO;
         IGameDAO gameDAO;
+
+        GameConnectionStorage connectionStorage = new GameConnectionStorage();
 
         // Data Access
         try{
@@ -43,6 +47,7 @@ public class Server {
         UserHandler userHandler = new UserHandler(userService);
         GameHandler gameHandler = new GameHandler(gameService);
         DestructionHandler destructionHandler = new DestructionHandler(destructionService);
+        WebsocketHandler websocketHandler = new WebsocketHandler(connectionStorage, authDAO);
 
         // ## Endpoints ##
         // User management endpoints
@@ -53,7 +58,11 @@ public class Server {
         // Game endpoints
         javalin.get("/game", gameHandler::listGames);
         javalin.post("/game", gameHandler::createGame);
-        javalin.put("/game", gameHandler::joinGame);
+        javalin.put("/game", gameHandler::joinGame).ws("/ws", ws -> {
+            ws.onConnect(websocketHandler);
+            ws.onMessage(websocketHandler);
+            ws.onClose(websocketHandler);
+        });
 
         // Destruction endpoint
         javalin.delete("/db", destructionHandler::clearApplication);
