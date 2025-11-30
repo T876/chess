@@ -1,5 +1,7 @@
 import com.google.gson.Gson;
 import ui.server.ServerFacade;
+import ui.server.WebsocketClient;
+import ui.server.WebsocketFacade;
 import ui.service.GameService;
 import ui.service.UserService;
 import ui.Router;
@@ -13,8 +15,19 @@ public class Main {
         boolean isRunning = true;
         Scanner inputScanner = new Scanner(System.in);
         ServerFacade facade = new ServerFacade(8080);
+        WebsocketClient wsClient;
+        WebsocketFacade wsFacade;
+
+        try {
+            wsClient = new WebsocketClient();
+            wsFacade = new WebsocketFacade(wsClient);
+        } catch (Exception e) {
+            System.out.println("Connection to server failed. Please try again and make sure you are online");
+            return;
+        }
+
         UserService userService = new UserService(facade);
-        GameService gameService = new GameService(facade);
+        GameService gameService = new GameService(facade, wsFacade);
         Router router = new Router(userService, gameService);
 
         System.out.println("♕ Welcome to Chess ♕");
@@ -48,7 +61,7 @@ public class Main {
                     System.out.println("Game ID must be a number");
                 } if (e.getMessage().contains("Game not found")){
                     System.out.println("Game not found");
-                }else {
+                } else {
                     System.out.println(e.getMessage());
                 }
 

@@ -20,10 +20,12 @@ import java.io.IOException;
 public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMessageHandler {
     GameConnectionStorage storage;
     IAuthDAO authDAO;
+    Gson serializer;
 
     public WebsocketHandler(GameConnectionStorage storage, IAuthDAO authDAO) {
         this.storage = storage;
         this.authDAO = authDAO;
+        this.serializer = new Gson();
     }
 
     @Override
@@ -35,12 +37,13 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
     @Override
     public void handleMessage(WsMessageContext ctx) {
         try {
-            UserGameCommand command = new Gson().fromJson(ctx.message(), UserGameCommand.class);
+            UserGameCommand command = serializer.fromJson(ctx.message(), UserGameCommand.class);
             AuthData userData;
             try {
                 userData = authDAO.verifyAuthToken(command.getAuthToken());
             } catch (DataAccessException e) {
-                ctx.send("Error: Unauthorized");
+                String message = serializer.toJson(e);
+                ctx.send(message);
                 return;
             }
 
@@ -57,7 +60,7 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         System.out.println("Websocket closed");
     }
 
-    public void connectToGame(int gameID, String username,  Session session) throws IOException {
+    public void connectToGame(int gameID, String username, Session session) throws IOException {
         this.storage.add(gameID, session);
         var message = String.format("%s joined the game", username);
         this.storage.broadcastToGame(gameID, message, session);

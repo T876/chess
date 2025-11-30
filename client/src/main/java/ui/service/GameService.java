@@ -7,18 +7,21 @@ import model.GameData;
 import model.GameInfo;
 import ui.EscapeSequences;
 import ui.server.ServerFacade;
+import ui.server.WebsocketFacade;
 
 import java.util.List;
 import java.util.Objects;
 
 public class GameService {
     private ServerFacade server;
+    private WebsocketFacade websocket;
     public ChessGame selectedGame;
     public ChessGame.TeamColor color;
     private List<GameInfo> gamesList;
 
-    public GameService(ServerFacade server) {
+    public GameService(ServerFacade server, WebsocketFacade websocket) {
         this.server = server;
+        this.websocket = websocket;
     }
 
     public int createGame(String name, String authToken) {
@@ -45,6 +48,7 @@ public class GameService {
         GameInfo gameToJoin = this.gamesList.get(gameIndex - 1);
 
         this.server.joinGame(authToken, gameToJoin.gameID(), teamColor);
+        this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID(), teamColor);
         ChessGame game = new ChessGame();
         this.selectedGame = game;
         this.color = Objects.equals(teamColor, "WHITE") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
