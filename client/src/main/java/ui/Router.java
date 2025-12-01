@@ -75,7 +75,7 @@ public class Router {
                         throw new RuntimeException("Please enter only the game id you want to observe");
                     }
 
-                    int observeIDNum = convertIDToInt(inputArgs[1]);
+                    int observeIDNum = convertIDToInt(inputArgs[1]) - 1;
 
                     this.gameService.observeGame(observeIDNum, this.userService.authData.authToken());
 
@@ -112,7 +112,25 @@ public class Router {
 
     }
 
+    public void routeInGameInput(String[] inputArgs) {
+        this.gameService.printGame();
 
+        switch (inputArgs[0]) {
+            case "help" -> this.printInGameHelp();
+            case "redraw" -> System.out.println();
+            default -> System.out.println("invalid input");
+        }
+    }
+
+    private void printInGameHelp() {
+        System.out.println("redraw - redraw chess board");
+        System.out.println("leave - leave the game");
+        if (this.gameService.color != null) {
+            System.out.println("move - <ROW 1-8> <COL a-h>");
+            System.out.println("resign - resign game");
+        }
+        System.out.println("help");
+    }
 
     private int convertIDToInt(String userInput) {
         try {

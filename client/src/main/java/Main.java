@@ -55,7 +55,7 @@ public class Main {
 
             try {
                 if (gameService.selectedGame != null) {
-                    gameService.printGame();
+                    router.routeInGameInput(input.split(" "));
                 } else {
                     router.routeUserInput(input.split(" "));
                 }

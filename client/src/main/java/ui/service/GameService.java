@@ -113,13 +113,17 @@ public class GameService {
 
             ChessPiece piece;
 
+            int colNum;
+
             if (color == ChessGame.TeamColor.WHITE) {
+                colNum = j;
                 piece = this.selectedGame.getBoard().getPiece(
-                        new ChessPosition(rowNum, j)
+                        new ChessPosition(rowNum, colNum)
                 );
             } else {
+                colNum = 9-j;
                 piece = this.selectedGame.getBoard().getPiece(
-                        new ChessPosition(rowNum, 9-j)
+                        new ChessPosition(rowNum, colNum)
                 );
             }
 
