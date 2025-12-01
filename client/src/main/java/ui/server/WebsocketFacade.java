@@ -1,11 +1,14 @@
 package ui.server;
 
 import com.google.gson.Gson;
+import jakarta.websocket.MessageHandler;
+import ui.WebsocketRouter;
 import websocket.commands.JoinGameCommand;
 
 public class WebsocketFacade {
     WebsocketClient client;
     Gson serializer;
+    WebsocketRouter router;
 
     public WebsocketFacade (WebsocketClient client) {
         this.client = client;

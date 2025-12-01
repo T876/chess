@@ -13,6 +13,7 @@ import io.javalin.websocket.WsMessageHandler;
 import model.AuthData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ServerNotificationMessage;
 
 import java.io.IOException;
 
@@ -62,7 +63,8 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
 
     public void connectToGame(int gameID, String username, Session session) throws IOException {
         this.storage.add(gameID, session);
-        var message = String.format("%s joined the game", username);
+        String messageBody = String.format("%s has joined the game", username);
+        var message = serializer.toJson(new ServerNotificationMessage(messageBody));
         this.storage.broadcastToGame(gameID, message, session);
     }
 }

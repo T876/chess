@@ -3,7 +3,6 @@ package ui.service;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import model.GameData;
 import model.GameInfo;
 import ui.EscapeSequences;
 import ui.server.ServerFacade;
@@ -13,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class GameService {
-    private ServerFacade server;
-    private WebsocketFacade websocket;
+    private final ServerFacade server;
+    private final WebsocketFacade websocket;
     public ChessGame selectedGame;
     public ChessGame.TeamColor color;
     private List<GameInfo> gamesList;
@@ -49,8 +48,7 @@ public class GameService {
 
         this.server.joinGame(authToken, gameToJoin.gameID(), teamColor);
         this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID(), teamColor);
-        ChessGame game = new ChessGame();
-        this.selectedGame = game;
+        this.selectedGame = new ChessGame();
         this.color = Objects.equals(teamColor, "WHITE") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
     }
 

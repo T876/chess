@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import ui.WebsocketRouter;
 import ui.server.ServerFacade;
 import ui.server.WebsocketClient;
 import ui.server.WebsocketFacade;
@@ -29,6 +30,8 @@ public class Main {
         UserService userService = new UserService(facade);
         GameService gameService = new GameService(facade, wsFacade);
         Router router = new Router(userService, gameService);
+        WebsocketRouter wsRouter = new WebsocketRouter(gameService, userService, wsClient);
+        wsRouter.startMessageListener();
 
         System.out.println("♕ Welcome to Chess ♕");
 

@@ -1,24 +1,20 @@
 package ui.server;
 
 import jakarta.websocket.*;
+import ui.WebsocketRouter;
 
 import java.io.IOException;
 import java.net.URI;
 
 public class WebsocketClient extends Endpoint {
-    Session session;
+    public Session session;
 
     public WebsocketClient() throws Exception {
         URI uri = new URI("ws://localhost:8080/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this, uri);
 
-        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-            public void onMessage(String message) {
-                System.out.println(message);
-                System.out.println("\nEnter another message you want to echo:");
-            }
-        });
+
     }
 
     public void send(String message) throws IOException {
