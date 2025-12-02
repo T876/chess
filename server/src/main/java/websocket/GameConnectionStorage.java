@@ -5,6 +5,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameConnectionStorage {
@@ -27,7 +28,7 @@ public class GameConnectionStorage {
     public void broadcastToGame(int gameID, String message, Session sender) throws IOException {
         String gameIDString = Integer.toString(gameID);
         for (Session s : connections.get(gameIDString)) {
-            if (s.isOpen()) {
+            if (s.isOpen() && !Objects.equals(s, sender)) {
                 s.getRemote().sendString(message);
             }
         }

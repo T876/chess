@@ -97,6 +97,17 @@ public class SQLGameDAO implements IGameDAO {
         return games;
     };
 
+    public GameData getGameByID(int id) {
+        GameData data;
+        try (Connection c = DatabaseManager.getConnection()) {
+            data = queryGameByID(c, id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return data;
+    }
+
     GameData queryGameByID(Connection c, int id) throws DataAccessException {
         String getGameString = """
                 SELECT id, whiteUsername, blackUsername, gameName, chessGame FROM game WHERE id=?

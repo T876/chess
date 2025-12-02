@@ -69,6 +69,10 @@ public class MemoryGameDAO implements IGameDAO {
 
     public void leaveGame(String color, int gameID, String username) throws DataAccessException { }
 
+    public GameData getGameByID(int id) {
+        throw new RuntimeException("Not implemented");
+    }
+
     public void clear() {
         this.games = new ArrayList<>();
     };

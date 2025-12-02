@@ -16,6 +16,7 @@ import model.AuthData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.LeaveGameCommand;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ServerLoadGameMessage;
 import websocket.messages.ServerNotificationMessage;
 
 import java.io.IOException;
@@ -73,12 +74,14 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         String messageBody = String.format("%s has joined the game", username);
         var message = serializer.toJson(new ServerNotificationMessage(messageBody));
         this.storage.broadcastToGame(gameID, message, session);
+        ChessGame currentGame = this.gameDAO.getGameByID(gameID).game();
+        var gameMessage = serializer.toJson(new ServerLoadGameMessage(currentGame));
+        this.storage.broadcastToGame(gameID, gameMessage, session);
     }
 
     public void disconnectFromGame(String messageRaw, Session session) throws DataAccessException, IOException {
         LeaveGameCommand command = serializer.fromJson(messageRaw, LeaveGameCommand.class);
         AuthData userData = authDAO.verifyAuthToken(command.getAuthToken());
-        ChessGame.TeamColor color;
         if (Objects.equals(command.color, "WHITE")) {
             this.gameDAO.leaveGame("WHITE", command.getGameID(), userData.username());
         } else if (Objects.equals(command.color, "BLACK")) {

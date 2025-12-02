@@ -11,6 +11,7 @@ public interface IGameDAO {
 
     // Read
     public List<GameData> getAllGames();
+    public GameData getGameByID(int id);
 
     // Update
     public void joinGame(String color, int gameID, String username) throws DataAccessException;

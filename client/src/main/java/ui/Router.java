@@ -136,7 +136,7 @@ public class Router {
         System.out.println("redraw - redraw chess board");
         System.out.println("leave - leave the game");
         if (this.gameService.color != null) {
-            System.out.println("move - <ROW 1-8> <COL a-h>");
+            System.out.println("move - <S-ROW 1-8> <S-COL a-h> <E-ROW 1-8> <E-COL a-h>");
             System.out.println("resign - resign game");
         }
         System.out.println("help");
