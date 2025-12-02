@@ -167,6 +167,39 @@ public class SQLGameDAO implements IGameDAO {
         }
     };
 
+    public void leaveGame(String color, int gameID, String username) throws DataAccessException {
+        String leaveGameString;
+
+        if (Objects.equals(color, "WHITE")) {
+            leaveGameString = """
+                UPDATE game SET whiteUsername=null WHERE id=?
+                """;
+        } else {
+            leaveGameString = """
+                UPDATE game SET blackUsername=null WHERE id=?
+                """;
+        }
+
+        try (Connection c = DatabaseManager.getConnection()) {
+            GameData existingGame = queryGameByID(c, gameID);
+            if (Objects.equals(color, "WHITE") && existingGame.whiteUsername() == null) {
+                throw new DataAccessException("Error: cannot leave empty game");
+            } else if (Objects.equals(color, "BLACK") && existingGame.blackUsername() != null) {
+                throw new DataAccessException("Error: cannot leave empty game");
+            }
+
+            try (var query = c.prepareStatement(leaveGameString)){
+                query.setInt(1, gameID);
+
+                query.executeUpdate();
+            }
+        }catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        } catch  (Exception e) {
+            throw new RuntimeException(e);
+        }
+    };
+
     // Delete
     public void clear() {
         String queryString = "TRUNCATE TABLE game";

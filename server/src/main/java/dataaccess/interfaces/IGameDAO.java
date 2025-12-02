@@ -14,6 +14,7 @@ public interface IGameDAO {
 
     // Update
     public void joinGame(String color, int gameID, String username) throws DataAccessException;
+    public void leaveGame(String color, int gameID, String username) throws DataAccessException;
 
     // Delete
     public void clear();

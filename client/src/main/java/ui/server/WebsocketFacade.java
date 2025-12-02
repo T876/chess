@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import jakarta.websocket.MessageHandler;
 import ui.WebsocketRouter;
 import websocket.commands.JoinGameCommand;
+import websocket.commands.LeaveGameCommand;
 
 public class WebsocketFacade {
     WebsocketClient client;
@@ -23,4 +24,15 @@ public class WebsocketFacade {
             throw new RuntimeException("Error: Join failed. Please try again");
         }
     }
+
+    public void sendLeaveGameCommand(String authToken, Integer gameID, String color) {
+        LeaveGameCommand command = new LeaveGameCommand(color, authToken, gameID);
+        try {
+            this.client.send(serializer.toJson(command));
+        } catch (Exception e) {
+            throw new RuntimeException("Error: Leave game failed. Please try again");
+        }
+    }
+
+
 }

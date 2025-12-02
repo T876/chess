@@ -15,6 +15,7 @@ public class GameService {
     private final ServerFacade server;
     private final WebsocketFacade websocket;
     public ChessGame selectedGame;
+    public int selectedGameId;
     public ChessGame.TeamColor color;
     private List<GameInfo> gamesList;
 
@@ -50,6 +51,7 @@ public class GameService {
         this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID(), teamColor);
         this.selectedGame = new ChessGame();
         this.color = Objects.equals(teamColor, "WHITE") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+        this.selectedGameId = gameToJoin.gameID();
     }
 
     public void observeGame(int gameIndex, String authToken) {
@@ -60,6 +62,13 @@ public class GameService {
             throw new RuntimeException("Game does not exist");
         }
         this.selectedGame = new ChessGame();
+        this.selectedGameId = gamesList.get(gameIndex).gameID();
+    }
+
+    public void leaveGame() {
+        this.selectedGame = null;
+        this.color = null;
+        this.selectedGameId = 0;
     }
 
     public void printGame() {

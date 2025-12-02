@@ -47,7 +47,7 @@ public class Server {
         UserHandler userHandler = new UserHandler(userService);
         GameHandler gameHandler = new GameHandler(gameService);
         DestructionHandler destructionHandler = new DestructionHandler(destructionService);
-        WebsocketHandler websocketHandler = new WebsocketHandler(connectionStorage, authDAO);
+        WebsocketHandler websocketHandler = new WebsocketHandler(connectionStorage, authDAO, gameDAO);
 
         // ## Endpoints ##
         // User management endpoints

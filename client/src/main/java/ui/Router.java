@@ -1,7 +1,9 @@
 package ui;
 
+import chess.ChessGame;
 import model.GameData;
 import model.GameInfo;
+import ui.server.WebsocketFacade;
 import ui.service.GameService;
 import ui.service.UserService;
 
@@ -11,12 +13,14 @@ import java.util.Objects;
 public class Router {
     private UserService userService;
     private GameService gameService;
+    private WebsocketFacade wsFacade;
 
     public boolean showHelp;
 
-    public Router(UserService userService, GameService gameService) {
+    public Router(UserService userService, GameService gameService, WebsocketFacade wsFacade) {
         this.userService = userService;
         this.gameService = gameService;
+        this.wsFacade = wsFacade;
     }
 
     public void routeUserInput(String[] inputArgs) {
@@ -113,11 +117,17 @@ public class Router {
     }
 
     public void routeInGameInput(String[] inputArgs) {
-        this.gameService.printGame();
+        if (!Objects.equals(inputArgs[0], "leave")) {
+            this.gameService.printGame();
+        } else {
+            System.out.println("You left the game.");
+        }
+
 
         switch (inputArgs[0]) {
             case "help" -> this.printInGameHelp();
             case "redraw" -> System.out.println();
+            case "leave" -> this.leaveGame();
             default -> System.out.println("invalid input");
         }
     }
@@ -138,6 +148,23 @@ public class Router {
         } catch (NumberFormatException e) {
             throw new RuntimeException("Game ID must be a number");
         }
+    }
+
+    private void leaveGame(){
+        String colorString;
+        if (this.gameService.color == ChessGame.TeamColor.WHITE) {
+            colorString = "WHITE";
+        } else if (this.gameService.color == ChessGame.TeamColor.BLACK) {
+            colorString = "BLACK";
+        } else {
+            colorString = "NONE";
+        }
+
+        this.wsFacade.sendLeaveGameCommand(
+                userService.authData.authToken(),
+                gameService.selectedGameId,
+                colorString);
+        this.gameService.leaveGame();
     }
 }
 

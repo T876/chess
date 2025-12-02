@@ -67,6 +67,8 @@ public class MemoryGameDAO implements IGameDAO {
         throw new DataAccessException("Error: already taken");
     };
 
+    public void leaveGame(String color, int gameID, String username) throws DataAccessException { }
+
     public void clear() {
         this.games = new ArrayList<>();
     };

@@ -27,7 +27,7 @@ public class GameConnectionStorage {
     public void broadcastToGame(int gameID, String message, Session sender) throws IOException {
         String gameIDString = Integer.toString(gameID);
         for (Session s : connections.get(gameIDString)) {
-            if (s.isOpen() && !s.equals(sender)) {
+            if (s.isOpen()) {
                 s.getRemote().sendString(message);
             }
         }
