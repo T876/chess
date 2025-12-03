@@ -148,7 +148,7 @@ public class Router {
         System.out.println("leave - leave the game");
         System.out.println("moves <ROW> <COL> - print valid moves");
         if (this.gameService.color != null) {
-            System.out.println("move <S-ROW 1-8> <S-COL a-h> <E-ROW 1-8> <E-COL a-h> - make move");
+            System.out.println("move <S-ROW 1-8> <S-COL a-h> <E-ROW 1-8> <E-COL a-h> <PROMOTION - OPTIONAL> - make move");
             System.out.println("resign - resign game");
         }
         System.out.println("help");

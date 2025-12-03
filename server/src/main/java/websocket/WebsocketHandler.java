@@ -125,17 +125,17 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         String winConMessage = null;
 
         if (Objects.equals(game.winner, "Black")) {
-            winConMessage = whiteUsername + " is the winner!";
-        } else if (Objects.equals(game.winner, "White")) {
             winConMessage = blackUsername + " is the winner!";
+        } else if (Objects.equals(game.winner, "White")) {
+            winConMessage = whiteUsername + " is the winner!";
         } else if (Objects.equals(game.winner, "None")) {
             winConMessage = "The game is a stalemate";
         }
 
         if (winConMessage != null) {
-            ServerNotificationMessage winCon = new ServerNotificationMessage(winConMessage + "No further moves can be made.");
+            ServerNotificationMessage winCon = new ServerNotificationMessage(winConMessage + " No further moves can be made.");
             try {
-                this.storage.broadcastToGame(command.getGameID(), serializer.toJson(winCon), session, true);
+                session.getRemote().sendString(serializer.toJson(winCon));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -174,13 +174,11 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
 
         if (winConMessage != null) {
             winCon = new ServerNotificationMessage(winConMessage);
-        }
-
-        else {
+        } else {
             if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
-                checkMessage = blackUsername + "is in check";
+                checkMessage = blackUsername + " is in check";
             } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
-                checkMessage = blackUsername + "is in check";
+                checkMessage = whiteUsername + " is in check";
             }
         }
 
@@ -199,10 +197,10 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
     }
 
     public String getWinConMessage(ChessGame game, String blackUsername, String  whiteUsername) {
-        if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+        if (game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
             return blackUsername + " is in checkmate, " + whiteUsername + " wins!";
-        }  else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
-            return blackUsername + " is in checkmate, " + whiteUsername + " wins!";
+        }  else if (game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
+            return whiteUsername + " is in checkmate, " + blackUsername + " wins!";
         } else if (game.isInStalemate(ChessGame.TeamColor.BLACK) || game.isInStalemate(ChessGame.TeamColor.WHITE)) {
             return "The game is a stalemate";
         }

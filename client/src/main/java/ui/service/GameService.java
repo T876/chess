@@ -82,6 +82,9 @@ public class GameService {
             printWhite(new ArrayList<>());
         }
         System.out.println("Current turn: " + this.selectedGame.getTeamTurn());
+        if (this.selectedGame.winner != null) {
+            System.out.println("Winner: " + this.selectedGame.winner);
+        }
     }
 
     public void printValidMoves(String row, String col) {
@@ -110,6 +113,10 @@ public class GameService {
     public ChessMove constructMove(String startRow, String startCol, String endRow, String endCol, String promotionPiece) {
         ChessPosition startingPosition = new ChessPosition(parseRow(startRow), parseCol(startCol));
 
+        if (this.selectedGame.getBoard().getPiece(startingPosition) == null) {
+            throw new RuntimeException("Cannot move piece for an empty space");
+        }
+
         if (this.selectedGame.getBoard().getPiece(startingPosition).getTeamColor() != this.color) {
             throw new RuntimeException("You can only move your own piece");
         }
@@ -125,7 +132,13 @@ public class GameService {
     }
 
     private int parseRow(String row) {
-        int rowInt = Integer.parseInt(row);
+        int rowInt;
+        try {
+            rowInt = Integer.parseInt(row);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Row must be a number");
+        }
+
         if (rowInt > 8 || rowInt < 1) {
             throw new RuntimeException();
         }
