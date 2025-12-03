@@ -211,6 +211,24 @@ public class SQLGameDAO implements IGameDAO {
         }
     };
 
+    public void updateGameState(ChessGame newGameState, int gameID) {
+        String updateGameString = """
+                UPDATE game SET chessGame=? WHERE id=?
+                """;
+
+        try (Connection c = DatabaseManager.getConnection()) {
+            String gameString = serializer.toJson(newGameState);
+
+            try (var query = c.prepareStatement(updateGameString)){
+                query.setString(1, gameString);
+                query.setInt(2, gameID);
+                query.executeUpdate();
+            }
+        } catch  (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // Delete
     public void clear() {
         String queryString = "TRUNCATE TABLE game";

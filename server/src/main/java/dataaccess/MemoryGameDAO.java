@@ -5,6 +5,7 @@ import dataaccess.interfaces.IGameDAO;
 import jdk.jshell.spi.ExecutionControl;
 import model.GameData;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -72,6 +73,8 @@ public class MemoryGameDAO implements IGameDAO {
     public GameData getGameByID(int id) {
         throw new RuntimeException("Not implemented");
     }
+
+    public void updateGameState(ChessGame newGameState, int gameID) { }
 
     public void clear() {
         this.games = new ArrayList<>();

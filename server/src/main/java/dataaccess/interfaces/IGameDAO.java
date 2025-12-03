@@ -1,8 +1,11 @@
 package dataaccess.interfaces;
 
+import chess.ChessGame;
 import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
 import model.GameData;
 
+import java.sql.Connection;
 import java.util.List;
 
 public interface IGameDAO {
@@ -16,6 +19,7 @@ public interface IGameDAO {
     // Update
     public void joinGame(String color, int gameID, String username) throws DataAccessException;
     public void leaveGame(String color, int gameID, String username) throws DataAccessException;
+    public void updateGameState(ChessGame newGameState, int gameID);
 
     // Delete
     public void clear();

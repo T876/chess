@@ -128,14 +128,29 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
             throw new RuntimeException("You can only move your own pieces on your turn.");
         }
 
+        if (!Objects.equals(username, whiteUsername) && !Objects.equals(username, blackUsername)) {
+            throw new RuntimeException("You cannot make a move as an observer");
+        }
+
         try {
             game.makeMove(command.getMove());
         } catch ( InvalidMoveException e) {
-            throw new RuntimeException("Move invalid. Please try again");
+            throw new RuntimeException("Move invalid.");
         }
 
-        // Update game in DB
-        // Broadcast new game state
+        this.gameDAO.updateGameState(game, command.getGameID());
+        ServerLoadGameMessage message = new ServerLoadGameMessage(game);
+        ServerNotificationMessage notificationMessage = new ServerNotificationMessage(String.format("%s made a move", username));
+        String notificationJson = serializer.toJson(notificationMessage);
+        String messageJson = serializer.toJson(message);
+
+
+        try {
+            this.storage.broadcastToGame(command.getGameID(), notificationJson, session, false);
+            this.storage.broadcastToGame(command.getGameID(), messageJson, session, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
