@@ -43,5 +43,14 @@ public class WebsocketFacade {
         }
     }
 
+    public void sendResignCommand(String authToken, int gameID) {
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID);
+        try {
+            this.client.send(serializer.toJson(command));
+        } catch (Exception e) {
+            throw new RuntimeException("Error: Unable to resign");
+        }
+    }
+
 
 }

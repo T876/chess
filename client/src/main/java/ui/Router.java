@@ -10,18 +10,21 @@ import ui.service.UserService;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Router {
     private UserService userService;
     private GameService gameService;
     private WebsocketFacade wsFacade;
+    private Scanner inputScanner;
 
     public boolean showHelp;
 
-    public Router(UserService userService, GameService gameService, WebsocketFacade wsFacade) {
+    public Router(UserService userService, GameService gameService, WebsocketFacade wsFacade, Scanner inputScanner) {
         this.userService = userService;
         this.gameService = gameService;
         this.wsFacade = wsFacade;
+        this.inputScanner = inputScanner;
     }
 
     public void routeUserInput(String[] inputArgs) {
@@ -131,6 +134,7 @@ public class Router {
             case "leave" -> this.leaveGame();
             case "moves" -> this.printValidMoves(inputArgs);
             case "move" -> this.movePiece(inputArgs);
+            case "resign" -> this.resign();
             default -> System.out.println("Invalid input. Type help for more info.");
         }
 
@@ -185,6 +189,19 @@ public class Router {
         } catch (NumberFormatException e) {
             throw new RuntimeException("Game ID must be a number");
         }
+    }
+
+    private void resign() {
+        System.out.println();
+        System.out.print("Would you really like to resign? (y/n) ");
+        String input = inputScanner.nextLine();
+        if (Objects.equals(input, "y")) {
+            System.out.println("Resign confirmed");
+        } else {
+            System.out.println("Resign cancelled");
+            return;
+        }
+        this.wsFacade.sendResignCommand(userService.authData.authToken(), gameService.selectedGameId);
     }
 
     private void leaveGame(){

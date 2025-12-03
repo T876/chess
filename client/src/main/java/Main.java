@@ -29,7 +29,7 @@ public class Main {
 
         UserService userService = new UserService(facade);
         GameService gameService = new GameService(facade, wsFacade);
-        Router router = new Router(userService, gameService, wsFacade);
+        Router router = new Router(userService, gameService, wsFacade, inputScanner);
         WebsocketRouter wsRouter = new WebsocketRouter(gameService, userService, wsClient);
         wsRouter.startMessageListener();
 

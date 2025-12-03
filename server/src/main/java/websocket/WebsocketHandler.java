@@ -122,9 +122,28 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         String whiteUsername = currentGameData.whiteUsername();
         ChessGame game = currentGameData.game();
         ChessPiece startingPiece = game.getBoard().getPiece(command.getMove().getStartPosition());
+        String winConMessage = null;
 
-        if (game.winner != null) {
-            throw new RuntimeException("Moves cannot be made after the game is over");
+        if (Objects.equals(game.winner, "Black")) {
+            winConMessage = whiteUsername + " is the winner!";
+        } else if (Objects.equals(game.winner, "White")) {
+            winConMessage = blackUsername + " is the winner!";
+        } else if (Objects.equals(game.winner, "None")) {
+            winConMessage = "The game is a stalemate";
+        }
+
+        if (winConMessage != null) {
+            ServerNotificationMessage winCon = new ServerNotificationMessage(winConMessage + "No further moves can be made.");
+            try {
+                this.storage.broadcastToGame(command.getGameID(), serializer.toJson(winCon), session, true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if (startingPiece == null) {
+            throw new RuntimeException("You cannot move an empty piece");
         }
 
         if (Objects.equals(username, blackUsername) && startingPiece.getTeamColor() != ChessGame.TeamColor.BLACK) {
@@ -145,16 +164,50 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
 
         this.gameDAO.updateGameState(game, command.getGameID());
         ServerLoadGameMessage message = new ServerLoadGameMessage(game);
-        ServerNotificationMessage notificationMessage = new ServerNotificationMessage(String.format("%s made a move", username));
+        ServerNotificationMessage notificationMessage = new ServerNotificationMessage(String.format("%s made a move: %s", username, command.getMove()));
         String notificationJson = serializer.toJson(notificationMessage);
         String messageJson = serializer.toJson(message);
+
+        winConMessage = getWinConMessage(game, blackUsername, whiteUsername);
+        ServerNotificationMessage winCon = null;
+        String checkMessage = null;
+
+        if (winConMessage != null) {
+            winCon = new ServerNotificationMessage(winConMessage);
+        }
+
+        else {
+            if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+                checkMessage = blackUsername + "is in check";
+            } else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
+                checkMessage = blackUsername + "is in check";
+            }
+        }
 
         try {
             this.storage.broadcastToGame(command.getGameID(), notificationJson, session, false);
             this.storage.broadcastToGame(command.getGameID(), messageJson, session, true);
-        } catch (IOException e) {
+            if (winCon != null) {
+                this.storage.broadcastToGame(command.getGameID(), serializer.toJson(winCon), session, true);
+            } else if (checkMessage != null) {
+                ServerNotificationMessage check = new ServerNotificationMessage(checkMessage);
+                this.storage.broadcastToGame(command.getGameID(), serializer.toJson(check), session, true);
+            }
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getWinConMessage(ChessGame game, String blackUsername, String  whiteUsername) {
+        if (game.isInCheck(ChessGame.TeamColor.BLACK)) {
+            return blackUsername + " is in checkmate, " + whiteUsername + " wins!";
+        }  else if (game.isInCheck(ChessGame.TeamColor.WHITE)) {
+            return blackUsername + " is in checkmate, " + whiteUsername + " wins!";
+        } else if (game.isInStalemate(ChessGame.TeamColor.BLACK) || game.isInStalemate(ChessGame.TeamColor.WHITE)) {
+            return "The game is a stalemate";
+        }
+
+        return null;
     }
 
     public void resign(UserGameCommand command, Session session, String username) {

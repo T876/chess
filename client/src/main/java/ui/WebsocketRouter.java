@@ -64,13 +64,15 @@ public class WebsocketRouter {
     }
 
     private void updateGameState(ServerLoadGameMessage message) {
-        if (!Objects.equals(this.gameService.selectedGame, message.getChessGame())) {
-            this.gameService.selectedGame = message.getChessGame();
-            System.out.println();
-            System.out.println("New game state received. Rendering...");
-            this.gameService.printGame();
-            System.out.print("[" + userService.authData.username() + "] >>> ");
+        this.gameService.selectedGame = message.getChessGame();
+        System.out.println();
+        System.out.println("New game state received. Rendering...");
+        this.gameService.printGame();
+        if (message.getChessGame().winner != null) {
+            System.out.println("The winner of this game is: " + this.gameService.selectedGame.winner);
+            System.out.println("Please type 'leave' to return to main menu");
         }
+        System.out.print("[" + userService.authData.username() + "] >>> ");
     }
 
     private void handleError(ServerErrorMessage message) {
