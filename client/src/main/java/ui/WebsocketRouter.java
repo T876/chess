@@ -6,6 +6,7 @@ import jakarta.websocket.MessageHandler;
 import ui.server.WebsocketClient;
 import ui.service.GameService;
 import ui.service.UserService;
+import websocket.messages.ServerErrorMessage;
 import websocket.messages.ServerLoadGameMessage;
 import websocket.messages.ServerMessage;
 import websocket.messages.ServerNotificationMessage;
@@ -44,6 +45,9 @@ public class WebsocketRouter {
                 case LOAD_GAME -> this.updateGameState(
                         this.serializer.fromJson(messageRaw, ServerLoadGameMessage.class)
                 );
+                case ERROR -> this.handleError(
+                        this.serializer.fromJson(messageRaw, ServerErrorMessage.class)
+                );
 
             }
 
@@ -63,10 +67,16 @@ public class WebsocketRouter {
         if (!Objects.equals(this.gameService.selectedGame, message.getChessGame())) {
             this.gameService.selectedGame = message.getChessGame();
             System.out.println();
-            System.out.println("Game has been updated. Redrawing...");
+            System.out.println("New game state received. Rendering...");
             this.gameService.printGame();
             System.out.print("[" + userService.authData.username() + "] >>> ");
         }
+    }
+
+    private void handleError(ServerErrorMessage message) {
+        System.out.println();
+        System.out.println("Error:" + message.getErrorMessage());
+        System.out.print("[" + userService.authData.username() + "] >>> ");
     }
 
 

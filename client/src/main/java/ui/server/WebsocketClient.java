@@ -1,7 +1,6 @@
 package ui.server;
 
 import jakarta.websocket.*;
-import ui.WebsocketRouter;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,8 +12,6 @@ public class WebsocketClient extends Endpoint {
         URI uri = new URI("ws://localhost:8080/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this, uri);
-
-
     }
 
     public void send(String message) throws IOException {

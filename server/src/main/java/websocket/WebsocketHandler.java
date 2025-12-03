@@ -140,7 +140,7 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         try {
             game.makeMove(command.getMove());
         } catch ( InvalidMoveException e) {
-            throw new RuntimeException("Move invalid.");
+            throw new RuntimeException("Move invalid. Remember, you can move your own pieces on your turn.");
         }
 
         this.gameDAO.updateGameState(game, command.getGameID());

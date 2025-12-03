@@ -72,7 +72,7 @@ public class Router {
                     this.gameService.joinGame(gameIDNum, inputArgs[2],
                             this.userService.authData.authToken());
 
-                    this.gameService.printGame();
+                    this.gameService.shouldDrawInputThing = false;
 
                     break;
                 case "observe":
@@ -84,7 +84,7 @@ public class Router {
 
                     this.gameService.observeGame(observeIDNum, this.userService.authData.authToken());
 
-                    this.gameService.printGame();
+                    this.gameService.shouldDrawInputThing = false;
                     break;
                 default:
                     System.out.println("Invalid input, please type help to see the list of valid inputs");
@@ -120,13 +120,14 @@ public class Router {
     public void routeInGameInput(String[] inputArgs) {
         if (!Objects.equals(inputArgs[0], "leave")
                 && !Objects.equals(inputArgs[0], "help")
-                && !Objects.equals(inputArgs[0], "moves")) {
+                && !Objects.equals(inputArgs[0], "moves")
+                && !Objects.equals(inputArgs[0], "move")) {
             this.gameService.printGame();
         }
 
         switch (inputArgs[0]) {
             case "help" -> this.printInGameHelp();
-            case "redraw" -> System.out.println();
+            case "redraw" -> System.out.print("");
             case "leave" -> this.leaveGame();
             case "moves" -> this.printValidMoves(inputArgs);
             case "move" -> this.movePiece(inputArgs);
@@ -175,6 +176,7 @@ public class Router {
         }
 
         this.wsFacade.sendMoveCommand(this.userService.authData.authToken(), this.gameService.selectedGameId, proposedMove);
+        this.gameService.shouldDrawInputThing = false;
     }
 
     private int convertIDToInt(String userInput) {

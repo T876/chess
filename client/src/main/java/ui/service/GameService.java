@@ -16,6 +16,7 @@ public class GameService {
     private final WebsocketFacade websocket;
     public ChessGame selectedGame;
     public int selectedGameId;
+    public boolean shouldDrawInputThing = true;
     public ChessGame.TeamColor color;
     private List<GameInfo> gamesList;
     private ChessPosition validMovesFor;
@@ -80,6 +81,7 @@ public class GameService {
         } else {
             printWhite(new ArrayList<>());
         }
+        System.out.println("Current turn: " + this.selectedGame.getTeamTurn());
     }
 
     public void printValidMoves(String row, String col) {
@@ -267,7 +269,6 @@ public class GameService {
         }
 
         this.printCharRow(rowString);
-
     }
 
     private void printWhite(Collection<ChessMove> validMoves) {

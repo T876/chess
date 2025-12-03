@@ -44,7 +44,11 @@ public class Main {
                     "[LOGGED_OUT]" :
                     "[" + userService.authData.username() + "]";
 
-            System.out.print(inputThing + " >>> ");
+            if (gameService.shouldDrawInputThing) {
+                System.out.print(inputThing + " >>> ");
+            }
+            gameService.shouldDrawInputThing = true;
+
 
             String input = inputScanner.nextLine();
 
