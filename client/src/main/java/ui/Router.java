@@ -117,12 +117,11 @@ public class Router {
     }
 
     public void routeInGameInput(String[] inputArgs) {
-        if (!Objects.equals(inputArgs[0], "leave")) {
+        if (!Objects.equals(inputArgs[0], "leave")
+                && !Objects.equals(inputArgs[0], "help")
+                && !Objects.equals(inputArgs[0], "moves")) {
             this.gameService.printGame();
-        } else {
-            System.out.println("You left the game.");
         }
-
 
         switch (inputArgs[0]) {
             case "help" -> this.printInGameHelp();
@@ -131,13 +130,17 @@ public class Router {
             case "moves" -> this.printValidMoves(inputArgs);
             default -> System.out.println("Invalid input. Type help for more info.");
         }
+
+        if (Objects.equals(inputArgs[0], "leave")) {
+            System.out.println("You left the game.");
+        }
     }
 
     private void printInGameHelp() {
         System.out.println("redraw - redraw chess board");
         System.out.println("leave - leave the game");
+        System.out.println("moves <ROW> <COL> - print valid moves");
         if (this.gameService.color != null) {
-            System.out.println("moves <ROW> <COL> - print valid moves");
             System.out.println("move <S-ROW 1-8> <S-COL a-h> <E-ROW 1-8> <E-COL a-h> - make move");
             System.out.println("resign - resign game");
         }
@@ -148,6 +151,7 @@ public class Router {
         if (args.length != 3) {
             throw new RuntimeException("Please use the following format: moves <ROW 1-8> <COL a-h>");
         }
+
         this.gameService.printValidMoves(args[1], args[2]);
     }
 

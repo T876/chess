@@ -38,7 +38,7 @@ public class MemoryGameDAO implements IGameDAO {
             }
         }
 
-        GameData newGame = null;
+        GameData newGame;
 
         if (Objects.equals(color, "WHITE")) {
             if (gameMatch.whiteUsername() == null) {

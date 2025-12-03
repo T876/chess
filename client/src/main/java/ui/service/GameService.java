@@ -49,7 +49,7 @@ public class GameService {
         GameInfo gameToJoin = this.gamesList.get(gameIndex - 1);
 
         this.server.joinGame(authToken, gameToJoin.gameID(), teamColor);
-        this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID(), teamColor);
+        this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID());
         this.selectedGame = new ChessGame();
         this.color = Objects.equals(teamColor, "WHITE") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
         this.selectedGameId = gameToJoin.gameID();
@@ -65,7 +65,7 @@ public class GameService {
         }
         this.selectedGame = new ChessGame();
         this.selectedGameId = gamesList.get(gameIndex).gameID();
-        this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID(), null);
+        this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID());
     }
 
     public void leaveGame() {
@@ -92,13 +92,13 @@ public class GameService {
 
         ChessPiece piece = this.selectedGame.getBoard().getPiece(validMovesFor);
 
-        if (piece == null || this.color != piece.getTeamColor()) {
-            throw new RuntimeException("You can only look at moves for your own piece");
+        if (piece == null) {
+            throw new RuntimeException("You can only look at moves for squares with pieces");
         }
 
         if (this.color == ChessGame.TeamColor.BLACK) {
             this.printBlack(this.selectedGame.validMoves(this.validMovesFor));
-        } else if (this.color == ChessGame.TeamColor.WHITE) {
+        } else {
             this.printWhite(this.selectedGame.validMoves(this.validMovesFor));
         }
 

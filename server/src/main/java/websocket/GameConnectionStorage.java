@@ -25,10 +25,10 @@ public class GameConnectionStorage {
         connections.remove(Integer.toString(gameId));
     }
 
-    public void broadcastToGame(int gameID, String message, Session sender) throws IOException {
+    public void broadcastToGame(int gameID, String message, Session sender, boolean includeSender) throws IOException {
         String gameIDString = Integer.toString(gameID);
         for (Session s : connections.get(gameIDString)) {
-            if (s.isOpen() && !Objects.equals(s, sender)) {
+            if (s.isOpen() && (!Objects.equals(s, sender) || includeSender)) {
                 s.getRemote().sendString(message);
             }
         }

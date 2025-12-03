@@ -1,10 +1,8 @@
 package ui.server;
 
 import com.google.gson.Gson;
-import jakarta.websocket.MessageHandler;
 import ui.WebsocketRouter;
-import websocket.commands.JoinGameCommand;
-import websocket.commands.LeaveGameCommand;
+import websocket.commands.UserGameCommand;
 
 public class WebsocketFacade {
     WebsocketClient client;
@@ -16,8 +14,8 @@ public class WebsocketFacade {
         this.serializer = new Gson();
     }
 
-    public void sendJoinGameCommand(String authToken, Integer gameID, String joinGameAs) {
-        JoinGameCommand command = new JoinGameCommand(authToken, gameID, joinGameAs);
+    public void sendJoinGameCommand(String authToken, Integer gameID) {
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
         try  {
             this.client.send(serializer.toJson(command));
         } catch (Exception e) {
@@ -26,7 +24,7 @@ public class WebsocketFacade {
     }
 
     public void sendLeaveGameCommand(String authToken, Integer gameID, String color) {
-        LeaveGameCommand command = new LeaveGameCommand(color, authToken, gameID);
+        UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
         try {
             this.client.send(serializer.toJson(command));
         } catch (Exception e) {
