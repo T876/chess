@@ -85,7 +85,7 @@ public class GameService {
     public void printValidMoves(String row, String col) {
         System.out.println();
         try {
-            this.validMovesFor = new ChessPosition(Integer.parseInt(row), parseCol(col));
+            this.validMovesFor = new ChessPosition(parseRow(row), parseCol(col));
         } catch (Exception e) {
             throw new RuntimeException("Invalid input, please enter <ROW 1-8> <COL a-h>");
         }
@@ -103,6 +103,31 @@ public class GameService {
         }
 
         this.validMovesFor = null;
+    }
+
+    public ChessMove constructMove(String startRow, String startCol, String endRow, String endCol, String promotionPiece) {
+        ChessPosition startingPosition = new ChessPosition(parseRow(startRow), parseCol(startCol));
+
+        if (this.selectedGame.getBoard().getPiece(startingPosition).getTeamColor() != this.color) {
+            throw new RuntimeException("You can only move your own piece");
+        }
+
+        ChessPosition endPosition = new ChessPosition(parseRow(endRow), parseCol(endCol));
+        ChessPiece.PieceType promotionPieceType = null;
+
+        if (promotionPiece != null) {
+            promotionPieceType = parsePromotionPiece(promotionPiece);
+        }
+
+        return new ChessMove(startingPosition, endPosition, promotionPieceType);
+    }
+
+    private int parseRow(String row) {
+        int rowInt = Integer.parseInt(row);
+        if (rowInt > 8 || rowInt < 1) {
+            throw new RuntimeException();
+        }
+        return rowInt;
     }
 
     private int parseCol(String col) {
@@ -124,8 +149,26 @@ public class GameService {
             } case "h" -> {
                 return 8;
             }
-            default -> throw new RuntimeException("Error: Invalid position");
+            default -> throw new RuntimeException(String.format("Error: Invalid column"));
 
+        }
+    }
+
+    private ChessPiece.PieceType parsePromotionPiece(String promotion) {
+        switch (promotion) {
+            case ("rook") -> {
+                return ChessPiece.PieceType.ROOK;
+            }
+            case ("bishop") -> {
+                return ChessPiece.PieceType.BISHOP;
+            }
+            case ("knight") -> {
+                return ChessPiece.PieceType.KNIGHT;
+            }
+            case ("queen") -> {
+                return ChessPiece.PieceType.QUEEN;
+            }
+            default -> throw new RuntimeException("Invalid promotion piece");
         }
     }
 

@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import model.GameData;
 import model.GameInfo;
 import ui.server.WebsocketFacade;
@@ -128,6 +129,7 @@ public class Router {
             case "redraw" -> System.out.println();
             case "leave" -> this.leaveGame();
             case "moves" -> this.printValidMoves(inputArgs);
+            case "move" -> this.movePiece(inputArgs);
             default -> System.out.println("Invalid input. Type help for more info.");
         }
 
@@ -155,6 +157,26 @@ public class Router {
         this.gameService.printValidMoves(args[1], args[2]);
     }
 
+    private void movePiece(String [] args) {
+        if (this.gameService.color == null) {
+            throw new RuntimeException("You cannot make a move when observing");
+        }
+
+        ChessMove proposedMove;
+
+        if (args.length == 5) {
+            proposedMove = this.gameService.constructMove(args[1], args[2], args[3], args[4], null);
+        } else if (args.length == 6) {
+            proposedMove = this.gameService.constructMove(args[1], args[2], args[3], args[4], args[5]);
+        } else {
+            throw new RuntimeException("""
+                Please use the following format: move <SROW 1-8> <SCOL a-h> <EROW 1-8> <ECOL a-h> <PROMOTION - OPTIONAL>
+            """);
+        }
+
+        this.wsFacade.sendMoveCommand(this.userService.authData.authToken(), this.gameService.selectedGameId, proposedMove);
+    }
+
     private int convertIDToInt(String userInput) {
         try {
             return Integer.parseInt(userInput);
@@ -164,19 +186,9 @@ public class Router {
     }
 
     private void leaveGame(){
-        String colorString;
-        if (this.gameService.color == ChessGame.TeamColor.WHITE) {
-            colorString = "WHITE";
-        } else if (this.gameService.color == ChessGame.TeamColor.BLACK) {
-            colorString = "BLACK";
-        } else {
-            colorString = "NONE";
-        }
-
         this.wsFacade.sendLeaveGameCommand(
                 userService.authData.authToken(),
-                gameService.selectedGameId,
-                colorString);
+                gameService.selectedGameId);
         this.gameService.leaveGame();
     }
 }

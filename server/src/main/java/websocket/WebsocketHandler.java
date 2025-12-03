@@ -1,6 +1,8 @@
 package websocket;
 
 import chess.ChessGame;
+import chess.ChessPiece;
+import chess.InvalidMoveException;
 import dataaccess.DataAccessException;
 import dataaccess.interfaces.IAuthDAO;
 import dataaccess.interfaces.IGameDAO;
@@ -15,6 +17,7 @@ import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
+import websocket.commands.UserMoveCommand;
 import websocket.messages.ServerErrorMessage;
 import websocket.messages.ServerLoadGameMessage;
 import websocket.messages.ServerNotificationMessage;
@@ -57,6 +60,7 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
             switch (command.getCommandType()) {
                 case CONNECT -> connectToGame(command, ctx.session, userData.username());
                 case LEAVE -> disconnectFromGame(command, ctx.session, userData.username());
+                case MAKE_MOVE -> makeMove(ctx.message(), ctx.session, userData.username());
             }
         } catch (Exception ex) {
             String error = serializer.toJson(new ServerErrorMessage(ex.getMessage()));
@@ -103,4 +107,35 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         String notificationMessage = serializer.toJson(messageObj);
         this.storage.broadcastToGame(command.getGameID(), notificationMessage, session, false);
     }
+
+    public void makeMove(String commandRaw, Session session, String username) {
+        UserMoveCommand command;
+        try {
+            command = serializer.fromJson(commandRaw, UserMoveCommand.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Bad request. Please try again");
+        }
+
+        GameData currentGameData = this.gameDAO.getGameByID(command.getGameID());
+        String blackUsername = currentGameData.blackUsername();
+        String whiteUsername = currentGameData.whiteUsername();
+        ChessGame game = currentGameData.game();
+        ChessPiece startingPiece = game.getBoard().getPiece(command.getMove().getStartPosition());
+
+        if (Objects.equals(username, blackUsername) && startingPiece.getTeamColor() != ChessGame.TeamColor.BLACK) {
+            throw new RuntimeException("You can only move your own pieces on your turn.");
+        } if (Objects.equals(username, whiteUsername) && startingPiece.getTeamColor() != ChessGame.TeamColor.WHITE) {
+            throw new RuntimeException("You can only move your own pieces on your turn.");
+        }
+
+        try {
+            game.makeMove(command.getMove());
+        } catch ( InvalidMoveException e) {
+            throw new RuntimeException("Move invalid. Please try again");
+        }
+
+        // Update game in DB
+        // Broadcast new game state
+    }
+
 }
