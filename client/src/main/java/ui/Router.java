@@ -128,7 +128,8 @@ public class Router {
             case "help" -> this.printInGameHelp();
             case "redraw" -> System.out.println();
             case "leave" -> this.leaveGame();
-            default -> System.out.println("invalid input");
+            case "moves" -> this.printValidMoves(inputArgs);
+            default -> System.out.println("Invalid input. Type help for more info.");
         }
     }
 
@@ -136,10 +137,18 @@ public class Router {
         System.out.println("redraw - redraw chess board");
         System.out.println("leave - leave the game");
         if (this.gameService.color != null) {
-            System.out.println("move - <S-ROW 1-8> <S-COL a-h> <E-ROW 1-8> <E-COL a-h>");
+            System.out.println("moves <ROW> <COL> - print valid moves");
+            System.out.println("move <S-ROW 1-8> <S-COL a-h> <E-ROW 1-8> <E-COL a-h> - make move");
             System.out.println("resign - resign game");
         }
         System.out.println("help");
+    }
+
+    private void printValidMoves(String[] args) {
+        if (args.length != 3) {
+            throw new RuntimeException("Please use the following format: moves <ROW 1-8> <COL a-h>");
+        }
+        this.gameService.printValidMoves(args[1], args[2]);
     }
 
     private int convertIDToInt(String userInput) {

@@ -1,6 +1,7 @@
 package ui.service;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import model.GameInfo;
@@ -8,8 +9,7 @@ import ui.EscapeSequences;
 import ui.server.ServerFacade;
 import ui.server.WebsocketFacade;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameService {
     private final ServerFacade server;
@@ -18,6 +18,7 @@ public class GameService {
     public int selectedGameId;
     public ChessGame.TeamColor color;
     private List<GameInfo> gamesList;
+    private ChessPosition validMovesFor;
 
     public GameService(ServerFacade server, WebsocketFacade websocket) {
         this.server = server;
@@ -73,9 +74,56 @@ public class GameService {
 
     public void printGame() {
         if (this.color == ChessGame.TeamColor.BLACK) {
-            printBlack();
+            printBlack(new ArrayList<>());
         } else {
-            printWhite();
+            printWhite(new ArrayList<>());
+        }
+    }
+
+    public void printValidMoves(String row, String col) {
+        System.out.println();
+        try {
+            this.validMovesFor = new ChessPosition(Integer.parseInt(row), parseCol(col));
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid input, please enter <ROW 1-8> <COL a-h>");
+        }
+
+        ChessPiece piece = this.selectedGame.getBoard().getPiece(validMovesFor);
+
+        if (piece == null || this.color != piece.getTeamColor()) {
+            throw new RuntimeException("You can only look at moves for your own piece");
+        }
+
+        if (this.color == ChessGame.TeamColor.BLACK) {
+            this.printBlack(this.selectedGame.validMoves(this.validMovesFor));
+        } else if (this.color == ChessGame.TeamColor.WHITE) {
+            this.printWhite(this.selectedGame.validMoves(this.validMovesFor));
+        }
+
+        this.validMovesFor = null;
+    }
+
+    private int parseCol(String col) {
+        switch (col) {
+            case "a" -> {
+                return 1;
+            } case "b" -> {
+                return 2;
+            } case "c" -> {
+                return 3;
+            } case "d" -> {
+                return 4;
+            } case "e" -> {
+                return 5;
+            } case "f" -> {
+                return 6;
+            } case "g" -> {
+                return 7;
+            } case "h" -> {
+                return 8;
+            }
+            default -> throw new RuntimeException("Error: Invalid position");
+
         }
     }
 
@@ -99,7 +147,7 @@ public class GameService {
         }
     }
 
-    private void printRow(int rowNum, ChessGame.TeamColor color) {
+    private void printRow(int rowNum, ChessGame.TeamColor color, Set<ChessMove> validMoveSet) {
         int flipper = rowNum % 2;
 
         if (color == ChessGame.TeamColor.BLACK) {
@@ -135,6 +183,12 @@ public class GameService {
                         new ChessPosition(rowNum, colNum)
                 );
             }
+            ChessMove hypotheticalMove = new ChessMove(this.validMovesFor, new ChessPosition(rowNum, colNum), null);
+
+            if (validMoveSet.contains(hypotheticalMove)) {
+                System.out.print(EscapeSequences.SET_BG_COLOR_YELLOW);
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+            }
 
             if (piece == null) {
                 System.out.print("   ");
@@ -157,26 +211,28 @@ public class GameService {
         printRowDigit(rowNum, true);
     }
 
-    private void printBlack() {
+    private void printBlack(Collection<ChessMove> validMoves) {
+        Set<ChessMove> validMovesSet = new HashSet<ChessMove>(validMoves);
         System.out.println(EscapeSequences.ERASE_SCREEN);
         String rowString = "    h  g  f  e  d  c  b  a    ";
 
         this.printCharRow(rowString);
         for (int i = 1; i <= 8 ; i++) {
-            printRow(i, ChessGame.TeamColor.BLACK);
+            printRow(i, ChessGame.TeamColor.BLACK, validMovesSet);
         }
 
         this.printCharRow(rowString);
 
     }
 
-    private void printWhite() {
+    private void printWhite(Collection<ChessMove> validMoves) {
+        Set<ChessMove> validMovesSet = new HashSet<ChessMove>(validMoves);
         System.out.println(EscapeSequences.ERASE_SCREEN);
         String rowString = "    a  b  c  d  e  f  g  h    ";
 
         printCharRow(rowString);
         for (int i = 8; i >= 1 ; i--) {
-            printRow(i, ChessGame.TeamColor.WHITE);
+            printRow(i, ChessGame.TeamColor.WHITE, validMovesSet);
         }
         printCharRow(rowString);
     }

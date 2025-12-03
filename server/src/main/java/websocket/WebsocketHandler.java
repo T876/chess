@@ -90,7 +90,9 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
 
         this.storage.remove(command.getGameID(), session);
 
-        String notificationMessage = String.format("%s has left the game", userData.username());
+        String messageString = String.format("%s has left the game", userData.username());
+        ServerNotificationMessage messageObj = new ServerNotificationMessage(messageString);
+        String notificationMessage = serializer.toJson(messageObj);
         this.storage.broadcastToGame(command.getGameID(), notificationMessage, session);
     }
 }

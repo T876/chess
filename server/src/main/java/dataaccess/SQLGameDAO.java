@@ -195,7 +195,7 @@ public class SQLGameDAO implements IGameDAO {
             GameData existingGame = queryGameByID(c, gameID);
             if (Objects.equals(color, "WHITE") && existingGame.whiteUsername() == null) {
                 throw new DataAccessException("Error: cannot leave empty game");
-            } else if (Objects.equals(color, "BLACK") && existingGame.blackUsername() != null) {
+            } else if (Objects.equals(color, "BLACK") && existingGame.blackUsername() == null) {
                 throw new DataAccessException("Error: cannot leave empty game");
             }
 
