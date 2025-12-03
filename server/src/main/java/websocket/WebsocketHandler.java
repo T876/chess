@@ -176,14 +176,11 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         }
 
         this.gameDAO.updateGameState(game, command.getGameID());
-//        ServerLoadGameMessage message = new ServerLoadGameMessage(game);
         ServerNotificationMessage notificationMessage = new ServerNotificationMessage(String.format("%s resigned.", username));
         String notificationJson = serializer.toJson(notificationMessage);
-//        String messageJson = serializer.toJson(message);
 
         try {
             this.storage.broadcastToGame(command.getGameID(), notificationJson, session, true);
-//            this.storage.broadcastToGame(command.getGameID(), messageJson, session, true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
