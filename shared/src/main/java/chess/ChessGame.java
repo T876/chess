@@ -11,6 +11,7 @@ import java.util.*;
 public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard currentBoard;
+    public String winner;
 
     public ChessGame() {
         currentBoard = new ChessBoard();
@@ -93,14 +94,38 @@ public class ChessGame {
         }
 
         currentBoard.makeMove(move);
+
+
         if (teamTurn == TeamColor.BLACK) {
+            if (isInCheckmate(TeamColor.WHITE)) {
+                this.winner = "Black";
+            }
+
+            if (isInStalemate(TeamColor.WHITE)) {
+                this.winner = "None";
+            }
+
             teamTurn = TeamColor.WHITE;
         } else {
+            if (isInCheckmate(TeamColor.BLACK)) {
+                this.winner = "White";
+            }
+
+            if (isInStalemate(TeamColor.BLACK)) {
+                this.winner = "None";
+            }
             teamTurn = TeamColor.BLACK;
         }
     }
 
 
+    public void resign(TeamColor color) {
+        if (color == TeamColor.WHITE) {
+            this.winner = "Black";
+        } else {
+            this.winner = "White";
+        }
+    }
 
 
     /**

@@ -144,7 +144,6 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         String notificationJson = serializer.toJson(notificationMessage);
         String messageJson = serializer.toJson(message);
 
-
         try {
             this.storage.broadcastToGame(command.getGameID(), notificationJson, session, false);
             this.storage.broadcastToGame(command.getGameID(), messageJson, session, true);
