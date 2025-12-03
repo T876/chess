@@ -61,6 +61,7 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
                 case CONNECT -> connectToGame(command, ctx.session, userData.username());
                 case LEAVE -> disconnectFromGame(command, ctx.session, userData.username());
                 case MAKE_MOVE -> makeMove(ctx.message(), ctx.session, userData.username());
+                case RESIGN -> resign(command, ctx.session, userData.username());
             }
         } catch (Exception ex) {
             String error = serializer.toJson(new ServerErrorMessage(ex.getMessage()));
@@ -122,6 +123,10 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         ChessGame game = currentGameData.game();
         ChessPiece startingPiece = game.getBoard().getPiece(command.getMove().getStartPosition());
 
+        if (game.winner != null) {
+            throw new RuntimeException("Moves cannot be made after the game is over");
+        }
+
         if (Objects.equals(username, blackUsername) && startingPiece.getTeamColor() != ChessGame.TeamColor.BLACK) {
             throw new RuntimeException("You can only move your own pieces on your turn.");
         } if (Objects.equals(username, whiteUsername) && startingPiece.getTeamColor() != ChessGame.TeamColor.WHITE) {
@@ -147,6 +152,38 @@ public class WebsocketHandler implements WsConnectHandler, WsCloseHandler, WsMes
         try {
             this.storage.broadcastToGame(command.getGameID(), notificationJson, session, false);
             this.storage.broadcastToGame(command.getGameID(), messageJson, session, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void resign(UserGameCommand command, Session session, String username) {
+        GameData currentGameData = this.gameDAO.getGameByID(command.getGameID());
+        String blackUsername = currentGameData.blackUsername();
+        String whiteUsername = currentGameData.whiteUsername();
+        ChessGame game = currentGameData.game();
+
+        if (game.winner != null) {
+            throw new RuntimeException("Cannot resign when there is a winner");
+        }
+
+        if (Objects.equals(username, blackUsername)) {
+            game.resign(ChessGame.TeamColor.BLACK);
+        } else if (Objects.equals(username, whiteUsername)) {
+            game.resign(ChessGame.TeamColor.WHITE);
+        } else {
+            throw new RuntimeException("Observers cannot resign");
+        }
+
+        this.gameDAO.updateGameState(game, command.getGameID());
+//        ServerLoadGameMessage message = new ServerLoadGameMessage(game);
+        ServerNotificationMessage notificationMessage = new ServerNotificationMessage(String.format("%s resigned.", username));
+        String notificationJson = serializer.toJson(notificationMessage);
+//        String messageJson = serializer.toJson(message);
+
+        try {
+            this.storage.broadcastToGame(command.getGameID(), notificationJson, session, true);
+//            this.storage.broadcastToGame(command.getGameID(), messageJson, session, true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
