@@ -57,13 +57,15 @@ public class GameService {
 
     public void observeGame(int gameIndex, String authToken) {
         this.gamesList = this.server.listGames(authToken);
+        GameInfo gameToJoin;
         try {
-            gamesList.get(gameIndex);
+            gameToJoin = gamesList.get(gameIndex);
         } catch (Exception e) {
             throw new RuntimeException("Game does not exist");
         }
         this.selectedGame = new ChessGame();
         this.selectedGameId = gamesList.get(gameIndex).gameID();
+        this.websocket.sendJoinGameCommand(authToken, gameToJoin.gameID(), null);
     }
 
     public void leaveGame() {

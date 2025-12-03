@@ -7,4 +7,8 @@ public class JoinGameCommand extends UserGameCommand {
         super(CommandType.CONNECT, authToken, gameID);
         this.joinGameAs = joinGameAs;
     }
+
+    public String getJoinGameAs () {
+        return this.joinGameAs;
+    }
 }
